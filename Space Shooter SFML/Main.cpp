@@ -16,6 +16,8 @@ int main()
 
 	//runs game
 	Start.run();
+
+	cout << "Test Github" << endl;
 	
 	return 0;
 }
