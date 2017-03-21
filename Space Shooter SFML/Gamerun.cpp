@@ -56,7 +56,7 @@ void Gamerun::run()
 
 	//Sets the font
 	Font font;
-	font = fontLoad("Objects/pixel.ttf");
+	font = fontLoad("Objects/Pixel.ttf");
 
 	//Loads a player sprite to display
 	Texture texturePlayer;

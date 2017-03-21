@@ -61,6 +61,7 @@ public:
 	int dropChance = 3;
 	enemyDetails ENEMY_SHIPS[4];
 	
+	
 
 	Gamerun();
 	void run();
