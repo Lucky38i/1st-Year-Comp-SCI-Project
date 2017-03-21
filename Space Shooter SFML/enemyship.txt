@@ -1,4 +1,0 @@
-space-shooter/ships/1.png 63 51
-space-shooter/ships/3.png 46 45
-space-shooter/ships/4.png 64 47
-space-shooter/ships/6.png 44 36
