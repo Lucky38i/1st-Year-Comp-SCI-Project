@@ -419,7 +419,7 @@ void Gamerun::run()
 		//Player1.wallCollision();
 
 		//Draw Player
-		//window.draw(Player1.rect);
+		window.draw(Player1.rect);
 		window.draw(Player1.sprite);
 
 		//Draw Text
