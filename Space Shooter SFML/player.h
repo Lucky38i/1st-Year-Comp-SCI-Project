@@ -21,6 +21,7 @@ public:
 	player();
 	void update();
 	void updateMovement();
+	void wallCollision(const int max_width, int dimension);
 };
 
 #endif /* __player__ */

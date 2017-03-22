@@ -38,5 +38,23 @@ void player::updateMovement()
 	}
 }
 
+void player::wallCollision(const int max_width, int dimensions)
+{
+	if (rect.getPosition().x <= dimensions)
+	{
+		canMoveLeft = false;
+	}
+	else if (rect.getPosition().x >= max_width - dimensions)
+	{
+		canMoveRight = false;
+	}
+	else
+	{
+		canMoveLeft = true;
+		canMoveRight = true;
+	}
+
+}
+
 
 

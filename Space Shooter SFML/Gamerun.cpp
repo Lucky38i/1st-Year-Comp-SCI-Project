@@ -62,10 +62,6 @@ void Gamerun::run()
 	Texture texturePlayer;
 	texturePlayer = textureLoad("space-shooter/ships/2.png");
 
-	//Loads a enemy sprite to display
-	Texture textureEnemy;
-	textureEnemy = textureLoad("space-shooter/ships/4.png");
-
 	//Loads a coin sprite to display
 	Texture textureCoin;
 	textureCoin = textureLoad("space-shooter/items/gem-3.png");
@@ -175,29 +171,16 @@ void Gamerun::run()
 		particleSystem.emitter.setParticlePosition(Vector2f(Player1.sprite.getPosition().x, Player1.sprite.getPosition().y + 15));
 		particleSystem.emitter.setParticleVelocity(thor::Distributions::deflect(velocity, 90.f));
 
-		//Elapsed Time
-
-		sf::Time elapsed1 = projectileClock.getElapsedTime();
-		sf::Time elapsed2 = collisionClock.getElapsedTime();
-		sf::Time elapsed3 = PickupClock.getElapsedTime();
-		sf::Time elapsed4 = projectileClock1.getElapsedTime();
-		sf::Time elapsed5 = enemySpawnClock.getElapsedTime();
+		//Elapsed Timers
+		sf::Time projectileElapsed = projectileClock.getElapsedTime();
+		sf::Time collisionElapsed = collisionClock.getElapsedTime();
+		sf::Time pickupElapsed = PickupClock.getElapsedTime();
+		sf::Time projectileElapsed1 = projectileClock1.getElapsedTime();
+		sf::Time spawnElapsed = enemySpawnClock.getElapsedTime();
 
 
 		//Player collides with boundaries
-		if (Player1.rect.getPosition().x <= 20)
-		{
-			Player1.canMoveLeft = false;
-		}
-		else if (Player1.rect.getPosition().x >= MAX_WIDTH - 20)
-		{
-			Player1.canMoveRight = false;
-		}
-		else
-		{
-			Player1.canMoveLeft = true;
-			Player1.canMoveRight = true;
-		}
+		Player1.wallCollision(MAX_WIDTH, 20);
 
 		//Player collides with pickup
 		universalCounter = 0;
@@ -216,7 +199,7 @@ void Gamerun::run()
 		}
 
 		//Enemy collides with player
-		if (elapsed2.asSeconds() >= 0.5)
+		if (collisionElapsed.asSeconds() >= 0.5)
 		{
 			collisionClock.restart();
 
@@ -347,23 +330,16 @@ void Gamerun::run()
 		//Enables particle system
 		window.draw(particleSystem.system);
 
-		//Spawn Enemies (y Key)
-		if (Keyboard::isKeyPressed(Keyboard::Y))
+		//Spawn Enemies
+		if (spawnElapsed.asSeconds() >= enemySpawnRate)
 		{
-			enemy1.rect.setPosition(generateRandom(window.getSize().x), generateRandom(window.getSize().y));
+			enemySpawnClock.restart();
+			enemy1.rect.setPosition(generateRandom(window.getSize().x), -100);
 			enemyArray.push_back(enemy1);
 		}
 
-		//Spawn Enemies
-		if (elapsed2.asSeconds() >= 0.5)
-		{
-			collisionClock.restart();
-
-
-
-
 			//Fire projectile (Space Bar)
-			if (elapsed1.asSeconds() >= 0.2)
+			if (projectileElapsed.asSeconds() >= 0.2)
 			{
 				projectileClock.restart();
 
@@ -380,7 +356,7 @@ void Gamerun::run()
 			for (iter11 = pickupArray.begin(); iter11 != pickupArray.end(); iter11++)
 			{
 				pickupArray[universalCounter].update();
-				if (elapsed3.asSeconds() >= 0.1)
+				if (pickupElapsed.asSeconds() >= 0.1)
 				{
 					PickupClock.restart();
 					pickupArray[universalCounter].animate();
@@ -398,7 +374,7 @@ void Gamerun::run()
 			for (iter = projectileArray.begin(); iter != projectileArray.end(); iter++)
 			{
 				projectileArray[universalCounter].update(); // Update projectile
-				if (elapsed4.asSeconds() >= 0.2)
+				if (projectileElapsed1.asSeconds() >= 0.2)
 				{
 					projectileClock1.restart();
 					projectileArray[universalCounter].updateAnimation();
@@ -425,7 +401,6 @@ void Gamerun::run()
 			//Update player
 			Player1.update();
 			Player1.updateMovement();
-			//Player1.wallCollision();
 
 			//Draw Player
 			//window.draw(Player1.rect);
@@ -460,7 +435,6 @@ void Gamerun::run()
 		}
 		return;
 	}
-}
 Texture Gamerun::textureLoad(string filename)
 {
 	Texture texture;

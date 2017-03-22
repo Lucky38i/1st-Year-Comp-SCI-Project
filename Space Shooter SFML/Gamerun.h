@@ -48,7 +48,7 @@ public:
 	//Variables
 	const int MAX_HEIGHT = 800;
 	const int MAX_WIDTH = 500;
-	int enemySpawnCount = 10;
+	double enemySpawnRate = 0.5; //Lower = faster eg. 1.5 = spawn enemy every 1.5 seconds
 
 	int dropChance = 3; // Drop % eg. 3 = 25% chance
 	enemyDetails ENEMY_SHIPS[4];
