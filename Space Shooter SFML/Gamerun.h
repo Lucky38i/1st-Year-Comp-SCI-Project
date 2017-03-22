@@ -48,20 +48,24 @@ public:
 	//Variables
 	const int MAX_HEIGHT = 800;
 	const int MAX_WIDTH = 500;
-	sf::Clock projectileClock;
-	sf::Clock projectileClock1;
-	sf::Clock collisionClock;
-	sf::Clock PickupClock;
-	sf::Clock particleClock;
+	double enemySpawnRate = 0.5; //Lower = faster eg. 1.5 = spawn enemy every 1.5 seconds
+
+	int dropChance = 3; // Drop % eg. 3 = 25% chance
+	enemyDetails ENEMY_SHIPS[4];
+	
+	//Fixed Varibles
+	sf::Clock projectileClock; //Clock for the projectile fire rate
+	sf::Clock projectileClock1; // Clock for animation the projectile
+	sf::Clock collisionClock; //Clock for the rate of player health lost
+	sf::Clock PickupClock;	 //Clock for animating the pickup
+	sf::Clock particleClock; //Clock for updating the particle system
+	sf::Clock enemySpawnClock; //Clock used for spawning enemies
 	int universalCounter = 0;
 	int counter2 = 0;
 	int counter3 = 0;
 	int enemyX;
 	int enemyY;
-	int dropChance = 3;
-	enemyDetails ENEMY_SHIPS[4];
-	
-	
+
 
 	Gamerun();
 	void run();

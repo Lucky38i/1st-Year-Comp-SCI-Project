@@ -62,10 +62,6 @@ void Gamerun::run()
 	Texture texturePlayer;
 	texturePlayer = textureLoad("space-shooter/ships/2.png");
 
-	//Loads a enemy sprite to display
-	Texture textureEnemy;
-	textureEnemy = textureLoad("space-shooter/ships/4.png");
-
 	//Loads a coin sprite to display
 	Texture textureCoin;
 	textureCoin = textureLoad("space-shooter/items/gem-3.png");
@@ -150,7 +146,7 @@ void Gamerun::run()
 	particleSystem.system.setTexture(textureParticle);
 	thor::PolarVector2f velocity(30.f, 90.f);
 
-	
+
 	//Initialize window
 	while (window.isOpen())
 	{
@@ -175,27 +171,16 @@ void Gamerun::run()
 		particleSystem.emitter.setParticlePosition(Vector2f(Player1.sprite.getPosition().x, Player1.sprite.getPosition().y + 15));
 		particleSystem.emitter.setParticleVelocity(thor::Distributions::deflect(velocity, 90.f));
 
-		//Elapsed Time
-		sf::Time elapsed1 = projectileClock.getElapsedTime();
-		sf::Time elapsed2 = collisionClock.getElapsedTime();
-		sf::Time elapsed3 = PickupClock.getElapsedTime();
-		sf::Time elapsed4 = projectileClock1.getElapsedTime();
+		//Elapsed Timers
+		sf::Time projectileElapsed = projectileClock.getElapsedTime();
+		sf::Time collisionElapsed = collisionClock.getElapsedTime();
+		sf::Time pickupElapsed = PickupClock.getElapsedTime();
+		sf::Time projectileElapsed1 = projectileClock1.getElapsedTime();
+		sf::Time spawnElapsed = enemySpawnClock.getElapsedTime();
 
 
 		//Player collides with boundaries
-		if (Player1.rect.getPosition().x <= 20)
-		{
-			Player1.canMoveLeft = false;
-		}
-		else if (Player1.rect.getPosition().x >= MAX_WIDTH-20)
-		{
-			Player1.canMoveRight = false;
-		}
-		else
-		{
-			Player1.canMoveLeft = true;
-			Player1.canMoveRight = true;
-		}
+		Player1.wallCollision(MAX_WIDTH, 20);
 
 		//Player collides with pickup
 		universalCounter = 0;
@@ -214,7 +199,7 @@ void Gamerun::run()
 		}
 
 		//Enemy collides with player
-		if (elapsed2.asSeconds() >= 0.5)
+		if (collisionElapsed.asSeconds() >= 0.5)
 		{
 			collisionClock.restart();
 
@@ -345,112 +330,111 @@ void Gamerun::run()
 		//Enables particle system
 		window.draw(particleSystem.system);
 
-		//Spawn Enemies (y Key)
-		if (Keyboard::isKeyPressed(Keyboard::Y))
+		//Spawn Enemies
+		if (spawnElapsed.asSeconds() >= enemySpawnRate)
 		{
-			enemy1.rect.setPosition(generateRandom(window.getSize().x), generateRandom(window.getSize().y));
+			enemySpawnClock.restart();
+			enemy1.rect.setPosition(generateRandom(window.getSize().x), -100);
 			enemyArray.push_back(enemy1);
 		}
 
-
-		//Fire projectile (Space Bar)
-		if (elapsed1.asSeconds() >= 0.2)
-		{
-			projectileClock.restart();
-
-			if (Keyboard::isKeyPressed(Keyboard::Space))
+			//Fire projectile (Space Bar)
+			if (projectileElapsed.asSeconds() >= 0.2)
 			{
-				projectile1.rect.setPosition(Player1.rect.getPosition().x - 5, Player1.rect.getPosition().y);
-				projectileArray.push_back(projectile1);
+				projectileClock.restart();
 
+				if (Keyboard::isKeyPressed(Keyboard::Space))
+				{
+					projectile1.rect.setPosition(Player1.rect.getPosition().x - 5, Player1.rect.getPosition().y);
+					projectileArray.push_back(projectile1);
+
+				}
 			}
-		}
 
-		//Draw Pickup
-		universalCounter = 0;
-		for (iter11 = pickupArray.begin(); iter11 != pickupArray.end(); iter11++)
-		{
-			pickupArray[universalCounter].update();
-			if (elapsed3.asSeconds() >= 0.1)
+			//Draw Pickup
+			universalCounter = 0;
+			for (iter11 = pickupArray.begin(); iter11 != pickupArray.end(); iter11++)
 			{
-				PickupClock.restart();
-				pickupArray[universalCounter].animate();
+				pickupArray[universalCounter].update();
+				if (pickupElapsed.asSeconds() >= 0.1)
+				{
+					PickupClock.restart();
+					pickupArray[universalCounter].animate();
+				}
+				//cout << pickupArray[universalCounter].universalCounter << endl;
+				//window.draw(pickupArray[universalCounter].rect);
+				window.draw(pickupArray[universalCounter].sprite);
+				universalCounter++;
 			}
-			//cout << pickupArray[universalCounter].universalCounter << endl;
-			//window.draw(pickupArray[universalCounter].rect);
-			window.draw(pickupArray[universalCounter].sprite);
-			universalCounter++;
-		}
 
 
 
-		//Draw Projectile
-		universalCounter = 0;
-		for (iter = projectileArray.begin(); iter != projectileArray.end(); iter++)
-		{
-			projectileArray[universalCounter].update(); // Update projectile
-			if (elapsed4.asSeconds() >= 0.2)
+			//Draw Projectile
+			universalCounter = 0;
+			for (iter = projectileArray.begin(); iter != projectileArray.end(); iter++)
 			{
-				projectileClock1.restart();
-				projectileArray[universalCounter].updateAnimation();
+				projectileArray[universalCounter].update(); // Update projectile
+				if (projectileElapsed1.asSeconds() >= 0.2)
+				{
+					projectileClock1.restart();
+					projectileArray[universalCounter].updateAnimation();
+				}
+				//window.draw(projectileArray[universalCounter].rect);
+				window.draw(projectileArray[universalCounter].sprite);
+				universalCounter++;
 			}
-			//window.draw(projectileArray[universalCounter].rect);
-			window.draw(projectileArray[universalCounter].sprite);
-			universalCounter++;
+
+			//Draw Enemy
+			universalCounter = 0;
+			for (iter4 = enemyArray.begin(); iter4 != enemyArray.end(); iter4++)
+			{
+				enemyArray[universalCounter].update();
+				enemyArray[universalCounter].updateMovement();
+				enemyArray[universalCounter].wallCollision();
+				window.draw(enemyArray[universalCounter].sprite);
+				//window.draw(enemyArray[universalCounter].rect);
+				//cout << enemyArray[universalCounter].rect.getPosition().x << endl;
+				universalCounter++;
+			}
+
+
+			//Update player
+			Player1.update();
+			Player1.updateMovement();
+
+			//Draw Player
+			//window.draw(Player1.rect);
+			window.draw(Player1.sprite);
+
+			//Draw Text
+			universalCounter = 0;
+			for (iter8 = textDisplayArray.begin(); iter8 != textDisplayArray.end(); iter8++)
+			{
+				textDisplayArray[universalCounter].update();
+				window.draw(textDisplayArray[universalCounter].text);
+
+				universalCounter++;
+			}
+
+			//Draw Score
+			scoreDisplay.text.setString("Score: " + to_string(Player1.score));
+			window.draw(scoreDisplay.text);
+
+			//Update health
+			healthBar.update();
+			health.update();
+			//cout << health.test<< endl;
+
+			//Draw health
+			window.draw(healthBar.sprite);
+			window.draw(health.sprite);
+
+
+			//window.setFramerateLimit(30);//Sets FPS to 60
+			window.display();//End current frame
 		}
-
-		//Draw Enemy
-		universalCounter = 0;
-		for (iter4 = enemyArray.begin(); iter4 != enemyArray.end(); iter4++)
-		{
-			enemyArray[universalCounter].update();
-			enemyArray[universalCounter].updateMovement();
-			enemyArray[universalCounter].wallCollision();
-			window.draw(enemyArray[universalCounter].sprite);
-			//window.draw(enemyArray[universalCounter].rect);
-			//cout << enemyArray[universalCounter].rect.getPosition().x << endl;
-			universalCounter++;
-		}
-
-
-		//Update player
-		Player1.update();
-		Player1.updateMovement();
-		//Player1.wallCollision();
-
-		//Draw Player
-		//window.draw(Player1.rect);
-		window.draw(Player1.sprite);
-
-		//Draw Text
-		universalCounter = 0;
-		for (iter8 = textDisplayArray.begin(); iter8 != textDisplayArray.end(); iter8++)
-		{
-			textDisplayArray[universalCounter].update();
-			window.draw(textDisplayArray[universalCounter].text);
-
-			universalCounter++;
-		}
-
-		//Draw Score
-		scoreDisplay.text.setString("Score: " + to_string(Player1.score));
-		window.draw(scoreDisplay.text);
-
-		//Update health
-		healthBar.update();
-		health.update();
-		//cout << health.test<< endl;
-
-		//Draw health
-		window.draw(healthBar.sprite);
-		window.draw(health.sprite);
-
-
-		//window.setFramerateLimit(30);//Sets FPS to 60
-		window.display();//End current frame
+		return;
 	}
-	return;
-}
 Texture Gamerun::textureLoad(string filename)
 {
 	Texture texture;
