@@ -1,4 +1,4 @@
-#1st Year Comp Sci End-Of-Year Project
+# 1st Year Comp Sci End-Of-Year Project
 
 Space Shooter game made in C++
 Uses SFML & Thor External Libraries
@@ -7,7 +7,7 @@ Credits to:
 Alex McBean
 N0696066
 
-Declaration of Ownership 
+# Declaration of Ownership 
 
 I, Alex McBean (N0696066) herby declare that am I the sole author of the associated report and software exclusive of the software declared below.
 
