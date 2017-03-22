@@ -2,6 +2,7 @@
 *.slo
 *.lo
 *.o
+*.opendb
 
 # Precompiled Headers
 *.gch
