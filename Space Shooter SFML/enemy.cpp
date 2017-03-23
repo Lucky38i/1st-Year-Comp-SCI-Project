@@ -32,17 +32,21 @@ void enemy::updateMovement()
 	
 	rect.move(0, downSpeed);
 
-	if (direction == 1) //Left
+	if (canMoveLeft == true)
 	{
-		rect.move(-movementSpeed, 0);
+		if (direction == 1) //Left
+		{
+			rect.move(-movementSpeed, 0);
 
+		}
 	}
-	else if (direction == 2) //Right
+	if (canMoveRight == true)
 	{
-		rect.move(movementSpeed, 0);
-
+		if (direction == 2) //Right
+		{
+			rect.move(movementSpeed, 0);
+		}
 	}
-
 
 	counter++;
 	if (counter >= 40)
@@ -54,14 +58,20 @@ void enemy::updateMovement()
 	
 }
 
-void enemy::wallCollision()
+void enemy::wallCollision(const int max_width, int dimensions)
 {
-	if (rect.getPosition().x - rect.getGlobalBounds().width <= 0)
+	if (rect.getPosition().x <= dimensions)
 	{
-		direction = 2;
+		canMoveLeft = false;
 	}
-	else if (rect.getPosition().x >= 500)
+	else if (rect.getPosition().x >= max_width - dimensions)
 	{
-		direction = 1;
+		canMoveRight = false;
 	}
+	else
+	{
+		canMoveLeft = true;
+		canMoveRight = true;
+	}
+
 }

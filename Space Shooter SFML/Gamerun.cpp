@@ -49,7 +49,7 @@ void Gamerun::run()
 	Image icon;
 	if (!icon.loadFromFile("space-shooter/backgrounds/planet-1.png"))
 	{
-		//cout << "failure" << endl;
+		cout << "failure" << endl;
 		return;
 	}
 	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
@@ -217,13 +217,13 @@ void Gamerun::run()
 					Player1.hp -= enemyArray[universalCounter].attackDamage;
 					health.updateHealth();
 					health.picWidth -= health.math*health.damage;
-					cout << health.picWidth << endl;
+					//cout << health.picWidth << endl;	//Debug Healthbar With
 				}
 				universalCounter++;
 			}
 		}
-
-		//cout << Player1.hp << endl;
+		
+		//cout << Player1.hp << endl; //Debug Health HP
 
 
 		// Projectile collides with enemy
@@ -244,7 +244,8 @@ void Gamerun::run()
 					textDisplayArray.push_back(textDisplay1);
 
 					enemyArray[counter2].hp -= projectileArray[universalCounter].attackDamage;
-					cout << "HP left " << enemyArray[counter2].hp << " attack damage " << projectileArray[universalCounter].attackDamage << endl;
+					//Debug Enemy HP & Attack damage
+					//cout << "HP left " << enemyArray[counter2].hp << " attack damage " << projectileArray[universalCounter].attackDamage << endl;
 
 
 					if (enemyArray[counter2].hp <= 0)
@@ -268,7 +269,7 @@ void Gamerun::run()
 		{
 			if (enemyArray[universalCounter].alive == false)
 			{
-				cout << "Enemy destroyed" << endl;
+				//cout << "Enemy destroyed" << endl; //Debug for Enemy Destroyed
 
 				//Place coin at enemy position
 				if (generateRandom(dropChance) == 1)
@@ -290,7 +291,7 @@ void Gamerun::run()
 		{
 			if (projectileArray[universalCounter].destroy == true)
 			{
-				//cout << "projectile destroyed" << endl;
+				//cout << "projectile destroyed" << endl; //Debug for projectile destroyed
 				projectileArray.erase(iter);
 				break;
 			}
@@ -331,12 +332,14 @@ void Gamerun::run()
 		window.draw(particleSystem.system);
 
 		//Spawn Enemies
+		
 		if (spawnElapsed.asSeconds() >= enemySpawnRate)
 		{
 			enemySpawnClock.restart();
 			enemy1.rect.setPosition(generateRandom(window.getSize().x), -100);
 			enemyArray.push_back(enemy1);
 		}
+		
 
 			//Fire projectile (Space Bar)
 			if (projectileElapsed.asSeconds() >= 0.2)
@@ -361,8 +364,8 @@ void Gamerun::run()
 					PickupClock.restart();
 					pickupArray[universalCounter].animate();
 				}
-				//cout << pickupArray[universalCounter].universalCounter << endl;
-				//window.draw(pickupArray[universalCounter].rect);
+				//cout << pickupArray[universalCounter].universalCounter << endl; //Debug Pickup array counter
+				//window.draw(pickupArray[universalCounter].rect); //Debug Rectangle of projectile
 				window.draw(pickupArray[universalCounter].sprite);
 				universalCounter++;
 			}
@@ -388,12 +391,12 @@ void Gamerun::run()
 			universalCounter = 0;
 			for (iter4 = enemyArray.begin(); iter4 != enemyArray.end(); iter4++)
 			{
+				enemyArray[universalCounter].wallCollision(MAX_WIDTH, enemyX);
 				enemyArray[universalCounter].update();
 				enemyArray[universalCounter].updateMovement();
-				enemyArray[universalCounter].wallCollision();
 				window.draw(enemyArray[universalCounter].sprite);
-				//window.draw(enemyArray[universalCounter].rect);
-				//cout << enemyArray[universalCounter].rect.getPosition().x << endl;
+				//window.draw(enemyArray[universalCounter].rect); //Debug Draw Enemy's rectangle
+				//cout << enemyArray[universalCounter].rect.getPosition().x << endl; //Debug Enemy X position
 				universalCounter++;
 			}
 
@@ -403,7 +406,7 @@ void Gamerun::run()
 			Player1.updateMovement();
 
 			//Draw Player
-			//window.draw(Player1.rect);
+			//window.draw(Player1.rect); //Debug Draw Enemy's rectangle
 			window.draw(Player1.sprite);
 
 			//Draw Text
@@ -423,7 +426,6 @@ void Gamerun::run()
 			//Update health
 			healthBar.update();
 			health.update();
-			//cout << health.test<< endl;
 
 			//Draw health
 			window.draw(healthBar.sprite);
