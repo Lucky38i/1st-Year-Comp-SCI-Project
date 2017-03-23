@@ -20,6 +20,8 @@ public:
 	int direction = 0; // 1 - left, 2 - right
 	int counter = 0;
 	int counterLife = 0;
+	bool canMoveLeft = true;
+	bool canMoveRight = true;
 
 	bool alive = true;
 
@@ -27,7 +29,7 @@ public:
 	enemy();
 	void update();
 	void updateMovement();
-	void wallCollision();
+	void wallCollision(const int max_width, int dimensions);
 };
 
 #endif __enemy__
