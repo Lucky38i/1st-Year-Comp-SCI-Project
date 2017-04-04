@@ -66,6 +66,13 @@ void Gamerun::run()
 	Texture textureCoin;
 	textureCoin = textureLoad("space-shooter/items/gem-3.png");
 
+	//Loads powerup sprite to display
+	Texture texturePowerUp;
+	texturePowerUp = textureLoad("space-shooter/items/power-up-1.png");
+
+	Texture texturePowerUp1;
+	texturePowerUp1 = textureLoad("space-shooter/items/power-up-2.png");
+
 	//Loads a projectile sprite to display
 	Texture textureProjectile;
 	textureProjectile = textureLoad("space-shooter/shots/spritesheet.png");
@@ -133,13 +140,13 @@ void Gamerun::run()
 	scoreDisplay.text.setCharacterSize(15);
 	scoreDisplay.text.setPosition(0, 35);
 
-	//coin Vector Array
+	//Pickupitem Vector Array
 	vector<pickup>::const_iterator iter11;
 	vector<pickup> pickupArray;
 
-	//coin Object
-	class pickup coinPickup;
-	coinPickup.sprite.setTexture(textureCoin);
+	//Pickupitem Object
+	class pickup pickupItem;
+	pickupItem.sprite.setTexture(textureCoin);
 
 	//particle Object
 	class Particles particleSystem;
@@ -192,6 +199,16 @@ void Gamerun::run()
 				{
 					Player1.score += pickupArray[universalCounter].coinValue;
 				}
+				else if (pickupArray[universalCounter].isPowerup_Fast == true)
+				{
+					Player1.powerUp_FireRate = true;
+					Player1.powerUp_Triple = false;
+				}
+				else if (pickupArray[universalCounter].isPowerup_Triple == true)
+				{
+					Player1.powerUp_Triple = true;
+					Player1.powerUp_FireRate = false;
+				}
 				pickupArray[universalCounter].destroy = true;
 			}
 
@@ -214,10 +231,14 @@ void Gamerun::run()
 						Player1.rect.getPosition().y - Player1.rect.getSize().y / 2);
 					textDisplayArray.push_back(textDisplay1);
 
+					//Removes hp & update healthbar
 					Player1.hp -= enemyArray[universalCounter].attackDamage;
 					health.updateHealth();
 					health.picWidth -= health.math*health.damage;
 					//cout << health.picWidth << endl;	//Debug Healthbar With
+
+					Player1.powerUp_FireRate = false;
+					Player1.powerUp_Triple = false;
 				}
 				universalCounter++;
 			}
@@ -274,9 +295,41 @@ void Gamerun::run()
 				//Place coin at enemy position
 				if (generateRandom(dropChance) == 1)
 				{
-					coinPickup.rect.setPosition(enemyArray[universalCounter].rect.getPosition().x - enemyArray[universalCounter].rect.getSize().x,
+					pickupItem.isCoin = true;
+					pickupItem.isPowerup_Fast = false;
+					pickupItem.isPowerup_Triple = false;
+					pickupItem.sprite.setTexture(textureCoin);
+					pickupItem.rect.setPosition(enemyArray[universalCounter].rect.getPosition().x - enemyArray[universalCounter].rect.getSize().x,
 						enemyArray[universalCounter].rect.getPosition().y - enemyArray[universalCounter].rect.getSize().y);
-					pickupArray.push_back(coinPickup);
+					pickupArray.push_back(pickupItem);
+				}
+
+				//place powerup: fast shot at enemy position
+				if (generateRandom(pickupChance) == 1) //20% chance
+				{
+					pickupItem.isCoin = false;
+					pickupItem.isPowerup_Triple = false;
+					pickupItem.isPowerup_Fast = true;
+					pickupItem.sprite.setTexture(texturePowerUp);
+					pickupItem.rect.setSize(Vector2f(24, 19));
+					pickupItem.sprite.setTextureRect(IntRect(0, 0, 24, 19));
+					pickupItem.rect.setPosition(enemyArray[universalCounter].rect.getPosition().x - enemyArray[universalCounter].rect.getSize().x,
+						enemyArray[universalCounter].rect.getPosition().y - enemyArray[universalCounter].rect.getSize().y);
+					pickupArray.push_back(pickupItem);
+				}
+				
+				//Place powerup: triple shot at enemy position
+				if (generateRandom(pickupChance) == 1) //20% chance
+				{
+					pickupItem.isCoin = false;
+					pickupItem.isPowerup_Triple = true;
+					pickupItem.isPowerup_Fast = false;
+					pickupItem.sprite.setTexture(texturePowerUp1);
+					pickupItem.rect.setSize(Vector2f(24, 19));
+					pickupItem.sprite.setTextureRect(IntRect(0, 0, 24, 19));
+					pickupItem.rect.setPosition(enemyArray[universalCounter].rect.getPosition().x - enemyArray[universalCounter].rect.getSize().x,
+						enemyArray[universalCounter].rect.getPosition().y - enemyArray[universalCounter].rect.getSize().y);
+					pickupArray.push_back(pickupItem);
 				}
 
 				enemyArray.erase(iter4);
@@ -332,7 +385,6 @@ void Gamerun::run()
 		window.draw(particleSystem.system);
 
 		//Spawn Enemies
-		
 		if (spawnElapsed.asSeconds() >= enemySpawnRate)
 		{
 			enemySpawnClock.restart();
@@ -342,15 +394,38 @@ void Gamerun::run()
 		
 
 			//Fire projectile (Space Bar)
-			if (projectileElapsed.asSeconds() >= 0.2)
+			if (projectileElapsed.asSeconds() >= fireRate)
 			{
 				projectileClock.restart();
 
 				if (Keyboard::isKeyPressed(Keyboard::Space))
 				{
-					projectile1.rect.setPosition(Player1.rect.getPosition().x - 5, Player1.rect.getPosition().y);
-					projectileArray.push_back(projectile1);
+					if (Player1.powerUp_Triple == true) //Powerup attack: triple shot
+					{
+						projectile1.rect.setPosition(Player1.rect.getPosition().x, Player1.rect.getPosition().y);
+						projectileArray.push_back(projectile1);
 
+						projectile1.rect.setPosition(Player1.rect.getPosition().x - 12, Player1.rect.getPosition().y);
+						projectileArray.push_back(projectile1);
+
+						projectile1.rect.setPosition(Player1.rect.getPosition().x + 12, Player1.rect.getPosition().y);
+						projectileArray.push_back(projectile1);
+					}
+					
+					if (Player1.powerUp_FireRate == true) //Powerup attack: fast shot
+					{
+						fireRate = 0.05;
+						projectile1.rect.setPosition(Player1.rect.getPosition().x - 5, Player1.rect.getPosition().y);
+						projectileArray.push_back(projectile1);
+					}
+					
+					else //Normal attack
+					{
+						fireRate = 0.4;
+						projectile1.rect.setPosition(Player1.rect.getPosition().x - 5, Player1.rect.getPosition().y);
+						projectileArray.push_back(projectile1);
+					}
+					cout << Player1.powerUp_FireRate << endl;
 				}
 			}
 
@@ -362,7 +437,11 @@ void Gamerun::run()
 				if (pickupElapsed.asSeconds() >= 0.1)
 				{
 					PickupClock.restart();
-					pickupArray[universalCounter].animate();
+					if (pickupArray[universalCounter].isCoin == true)
+					{
+						pickupArray[universalCounter].animate();
+					}
+					
 				}
 				//cout << pickupArray[universalCounter].universalCounter << endl; //Debug Pickup array counter
 				//window.draw(pickupArray[universalCounter].rect); //Debug Rectangle of projectile

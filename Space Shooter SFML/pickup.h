@@ -9,7 +9,9 @@ class pickup : public entity
 public:
 
 	//Variables
-	bool isCoin = true;
+	bool isCoin = false;
+	bool isPowerup_Triple = false;
+	bool isPowerup_Fast = false;
 	int counter = 0;
 	bool destroy = false;
 	int coinValue = 100;
