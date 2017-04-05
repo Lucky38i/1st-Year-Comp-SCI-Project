@@ -184,6 +184,7 @@ void Gamerun::run()
 		sf::Time pickupElapsed = PickupClock.getElapsedTime();
 		sf::Time projectileElapsed1 = projectileClock1.getElapsedTime();
 		sf::Time spawnElapsed = enemySpawnClock.getElapsedTime();
+		sf::Time powerUpElapsed = Player1.powerUpClock.getElapsedTime();
 
 
 		//Player collides with boundaries
@@ -213,6 +214,17 @@ void Gamerun::run()
 			}
 
 			universalCounter++;
+		}
+
+		//Sets a timer for how longer player can have a powerup
+		if (Player1.powerUp_FireRate == true || Player1.powerUp_Triple == true)
+		{
+			if (powerUpElapsed.asSeconds() >= Player1.powerUpTime)
+			{
+				Player1.powerUpClock.restart();
+				Player1.powerUp_FireRate = false;
+				Player1.powerUp_Triple = false;
+			}
 		}
 
 		//Enemy collides with player
@@ -293,7 +305,7 @@ void Gamerun::run()
 				//cout << "Enemy destroyed" << endl; //Debug for Enemy Destroyed
 
 				//Place coin at enemy position
-				if (generateRandom(dropChance) == 1)
+				if (generateRandom(pickupItem.coinChance) == 1)
 				{
 					pickupItem.isCoin = true;
 					pickupItem.isPowerup_Fast = false;
@@ -305,7 +317,7 @@ void Gamerun::run()
 				}
 
 				//place powerup: fast shot at enemy position
-				if (generateRandom(pickupChance) == 1) //20% chance
+				if (generateRandom(pickupItem.powerUpChance) == 1) //20% chance
 				{
 					pickupItem.isCoin = false;
 					pickupItem.isPowerup_Triple = false;
@@ -319,7 +331,7 @@ void Gamerun::run()
 				}
 				
 				//Place powerup: triple shot at enemy position
-				if (generateRandom(pickupChance) == 1) //20% chance
+				if (generateRandom(pickupItem.powerUpChance) == 1) //20% chance
 				{
 					pickupItem.isCoin = false;
 					pickupItem.isPowerup_Triple = true;
@@ -385,7 +397,7 @@ void Gamerun::run()
 		window.draw(particleSystem.system);
 
 		//Spawn Enemies
-		if (spawnElapsed.asSeconds() >= enemySpawnRate)
+		if (spawnElapsed.asSeconds() >= enemy1.enemySpawnRate)
 		{
 			enemySpawnClock.restart();
 			enemy1.rect.setPosition(generateRandom(window.getSize().x), -100);
@@ -425,7 +437,6 @@ void Gamerun::run()
 						projectile1.rect.setPosition(Player1.rect.getPosition().x - 5, Player1.rect.getPosition().y);
 						projectileArray.push_back(projectile1);
 					}
-					cout << Player1.powerUp_FireRate << endl;
 				}
 			}
 

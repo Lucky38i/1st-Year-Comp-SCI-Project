@@ -18,6 +18,9 @@ public:
 	bool canMoveRight = true;
 	bool powerUp_Triple = false;
 	bool powerUp_FireRate = false;
+	int powerUpTime = 15;
+
+	sf::Clock powerUpClock;
 
 	//Constructors
 	player();

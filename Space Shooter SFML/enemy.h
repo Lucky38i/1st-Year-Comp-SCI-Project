@@ -15,6 +15,7 @@ public:
 	int hp = 3;
 	int lifeTime = 1000;
 	int deathValue = 10;
+	double enemySpawnRate = 0.5; //Lower = faster eg. 1.5 = spawn enemy every 1.5 seconds
 
 	//Fixed Variables
 	int direction = 0; // 1 - left, 2 - right
