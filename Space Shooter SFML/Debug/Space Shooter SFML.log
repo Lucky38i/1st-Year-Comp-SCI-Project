@@ -3,10 +3,10 @@ c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\par
 c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\particles.h(28): warning C4305: 'initializing': truncation from 'double' to 'float'
 c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\particles.h(29): warning C4305: 'initializing': truncation from 'double' to 'float'
 c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(23): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(130): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(132): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(412): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(544): warning C4551: function call missing argument list
-c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(554): warning C4551: function call missing argument list
+c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(152): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(154): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(448): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(584): warning C4551: function call missing argument list
+c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(594): warning C4551: function call missing argument list
   Space Shooter SFML.vcxproj -> C:\Users\almcb\Documents\GitHub\1st-Year-Comp-SCI-Project\Debug\Space Shooter SFML.exe
   Space Shooter SFML.vcxproj -> C:\Users\almcb\Documents\GitHub\1st-Year-Comp-SCI-Project\Debug\Space Shooter SFML.pdb (Full PDB)

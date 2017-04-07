@@ -58,16 +58,34 @@ void Gamerun::run()
 	Font font;
 	font = fontLoad("Objects/Pixel.ttf");
 
-	//Sets a base sound object
-	Sound sounds;
+	//Sets the music
+	Music bgMusic;
+	bgMusic.openFromFile("space-shooter/music/1.ogg");
+	//Plays music
+	bgMusic.play();
+	bgMusic.setVolume(50);
+	bgMusic.setLoop(true);
+
+	//Sets a base sound objects
+	Sound pickupSounds;
+	Sound enemySounds;
+	Sound playerSounds;
 
 	//Loads a sound for the coin pickup
 	SoundBuffer coinSound;
 	coinSound.loadFromFile("space-shooter/sounds/gold-2.wav");
 
 	//Loads a sound for the powerup pickup
-	SoundBuffer pickupSound;
-	pickupSound.loadFromFile("space-shooter/sounds/power-up-4.wav");
+	SoundBuffer powerupSound;
+	powerupSound.loadFromFile("space-shooter/sounds/power-up-4.wav");
+
+	//Loads a sound for the projectile
+	SoundBuffer projectileSound;
+	projectileSound.loadFromFile("space-shooter/sounds/laser.wav");
+
+	//Loads a sound for a destroyed enemy
+	SoundBuffer enemyDestroyedSound;
+	enemyDestroyedSound.loadFromFile("space-shooter/sounds/enemyexplosion.wav");
 
 	//Loads a player sprite to display
 	Texture texturePlayer;
@@ -179,8 +197,15 @@ void Gamerun::run()
 			}
 		}
 
-		//Clear Screen
 		window.clear(/*sf::Color::Black*/);
+		//Read's gameover is player dies
+		if (Player1.hp <= 0)
+		{
+			cout << " true " << endl;
+			window.clear(Color::Green);
+			//window.draw()
+		}
+
 
 		//Update particle system
 		particleSystem.system.update(particleClock.restart());
@@ -210,22 +235,22 @@ void Gamerun::run()
 				if (pickupArray[universalCounter].isCoin == true)
 				{
 					Player1.score += pickupArray[universalCounter].coinValue;
-					sounds.setBuffer(coinSound);
-					sounds.play();
+					pickupSounds.setBuffer(coinSound);
+					pickupSounds.play();
 				}
 				else if (pickupArray[universalCounter].isPowerup_Fast == true)
 				{
 					Player1.powerUp_FireRate = true;
 					Player1.powerUp_Triple = false;
-					sounds.setBuffer(pickupSound);
-					sounds.play();
+					pickupSounds.setBuffer(powerupSound);
+					pickupSounds.play();
 				}
 				else if (pickupArray[universalCounter].isPowerup_Triple == true)
 				{
 					Player1.powerUp_Triple = true;
 					Player1.powerUp_FireRate = false;
-					sounds.setBuffer(pickupSound);
-					sounds.play();
+					pickupSounds.setBuffer(powerupSound);
+					pickupSounds.play();
 				}
 				pickupArray[universalCounter].destroy = true;
 			}
@@ -273,7 +298,8 @@ void Gamerun::run()
 			}
 		}
 		
-		//cout << Player1.hp << endl; //Debug Health HP
+		cout << Player1.hp << endl; //Debug Health HP
+
 
 
 		// Projectile collides with enemy
@@ -301,6 +327,8 @@ void Gamerun::run()
 					if (enemyArray[counter2].hp <= 0)
 					{
 						enemyArray[counter2].alive = false;
+						enemySounds.setBuffer(enemyDestroyedSound);
+						enemySounds.play();
 						Player1.score += enemyArray[counter2].deathValue;
 					}
 
@@ -422,40 +450,44 @@ void Gamerun::run()
 		}
 		
 
-			//Fire projectile (Space Bar)
-			if (projectileElapsed.asSeconds() >= fireRate)
+		//Fire projectile (Space Bar)
+		if (projectileElapsed.asSeconds() >= fireRate)
+		{
+			projectileClock.restart();
+
+			if (Keyboard::isKeyPressed(Keyboard::Space))
 			{
-				projectileClock.restart();
+				//Plays projectile sound
+				playerSounds.setBuffer(projectileSound);
+				playerSounds.play();
 
-				if (Keyboard::isKeyPressed(Keyboard::Space))
+				if (Player1.powerUp_Triple == true) //Powerup attack: triple shot
 				{
-					if (Player1.powerUp_Triple == true) //Powerup attack: triple shot
-					{
-						projectile1.rect.setPosition(Player1.rect.getPosition().x, Player1.rect.getPosition().y);
-						projectileArray.push_back(projectile1);
+					projectile1.rect.setPosition(Player1.rect.getPosition().x, Player1.rect.getPosition().y);
+					projectileArray.push_back(projectile1);
 
-						projectile1.rect.setPosition(Player1.rect.getPosition().x - 12, Player1.rect.getPosition().y);
-						projectileArray.push_back(projectile1);
+					projectile1.rect.setPosition(Player1.rect.getPosition().x - 12, Player1.rect.getPosition().y);
+					projectileArray.push_back(projectile1);
 
-						projectile1.rect.setPosition(Player1.rect.getPosition().x + 12, Player1.rect.getPosition().y);
-						projectileArray.push_back(projectile1);
-					}
+					projectile1.rect.setPosition(Player1.rect.getPosition().x + 12, Player1.rect.getPosition().y);
+					projectileArray.push_back(projectile1);
+				}
 					
-					if (Player1.powerUp_FireRate == true) //Powerup attack: fast shot
-					{
-						fireRate = 0.05;
-						projectile1.rect.setPosition(Player1.rect.getPosition().x - 5, Player1.rect.getPosition().y);
-						projectileArray.push_back(projectile1);
-					}
+				if (Player1.powerUp_FireRate == true) //Powerup attack: fast shot
+				{
+					fireRate = 0.05;
+					projectile1.rect.setPosition(Player1.rect.getPosition().x - 5, Player1.rect.getPosition().y);
+					projectileArray.push_back(projectile1);
+				}
 					
-					else //Normal attack
-					{
-						fireRate = 0.4;
-						projectile1.rect.setPosition(Player1.rect.getPosition().x - 5, Player1.rect.getPosition().y);
-						projectileArray.push_back(projectile1);
-					}
+				else //Normal attack
+				{
+					fireRate = 0.4;
+					projectile1.rect.setPosition(Player1.rect.getPosition().x - 5, Player1.rect.getPosition().y);
+					projectileArray.push_back(projectile1);
 				}
 			}
+		}
 
 			//Draw Pickup
 			universalCounter = 0;
