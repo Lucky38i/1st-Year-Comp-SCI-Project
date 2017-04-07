@@ -1,55 +1,12 @@
-﻿Build started 4/5/2017 11:57:45 AM.
-     1>Project "C:\Users\DevSystem\Documents\GitHub\1st-Year-Comp-SCI-Project\Space Shooter SFML\Space Shooter SFML.vcxproj" on node 2 (Rebuild target(s)).
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I"C:\Users\DevSystem\Documents\GitHub\1st-Year-Comp-SCI-Project\Thor-2.0\include" /I"C:\Users\DevSystem\Documents\GitHub\1st-Year-Comp-SCI-Project\SFML-2.4.0\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt enemy.cpp entity.cpp Gamerun.cpp hud.cpp Main.cpp Particles.cpp pickup.cpp player.cpp projectile.cpp random.cpp textDisplay.cpp
-         textDisplay.cpp
-         random.cpp
-     1>c:\users\devsystem\documents\github\1st-year-comp-sci-project\space shooter sfml\random.cpp(8): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-     1>c:\users\devsystem\documents\github\1st-year-comp-sci-project\space shooter sfml\random.cpp(9): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-     1>c:\users\devsystem\documents\github\1st-year-comp-sci-project\space shooter sfml\random.cpp(16): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-     1>c:\users\devsystem\documents\github\1st-year-comp-sci-project\space shooter sfml\random.cpp(17): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-     1>c:\users\devsystem\documents\github\1st-year-comp-sci-project\space shooter sfml\random.cpp(30): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-     1>c:\users\devsystem\documents\github\1st-year-comp-sci-project\space shooter sfml\random.cpp(31): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-         projectile.cpp
-         player.cpp
-         pickup.cpp
-         Particles.cpp
-     1>c:\users\devsystem\documents\github\1st-year-comp-sci-project\space shooter sfml\particles.h(22): warning C4083: expected ')'; found identifier 'C4305'
-     1>c:\users\devsystem\documents\github\1st-year-comp-sci-project\space shooter sfml\particles.h(28): warning C4305: 'initializing': truncation from 'double' to 'float'
-     1>c:\users\devsystem\documents\github\1st-year-comp-sci-project\space shooter sfml\particles.h(29): warning C4305: 'initializing': truncation from 'double' to 'float'
-         Main.cpp
-     1>c:\users\devsystem\documents\github\1st-year-comp-sci-project\space shooter sfml\particles.h(22): warning C4083: expected ')'; found identifier 'C4305'
-     1>c:\users\devsystem\documents\github\1st-year-comp-sci-project\space shooter sfml\particles.h(28): warning C4305: 'initializing': truncation from 'double' to 'float'
-     1>c:\users\devsystem\documents\github\1st-year-comp-sci-project\space shooter sfml\particles.h(29): warning C4305: 'initializing': truncation from 'double' to 'float'
-         hud.cpp
-         Gamerun.cpp
-     1>c:\users\devsystem\documents\github\1st-year-comp-sci-project\space shooter sfml\particles.h(22): warning C4083: expected ')'; found identifier 'C4305'
-     1>c:\users\devsystem\documents\github\1st-year-comp-sci-project\space shooter sfml\particles.h(28): warning C4305: 'initializing': truncation from 'double' to 'float'
-     1>c:\users\devsystem\documents\github\1st-year-comp-sci-project\space shooter sfml\particles.h(29): warning C4305: 'initializing': truncation from 'double' to 'float'
-     1>c:\users\devsystem\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(23): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-     1>c:\users\devsystem\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(123): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-     1>c:\users\devsystem\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(125): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-     1>c:\users\devsystem\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(403): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-     1>c:\users\devsystem\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(535): warning C4551: function call missing argument list
-     1>c:\users\devsystem\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(545): warning C4551: function call missing argument list
-         entity.cpp
-         enemy.cpp
-         Generating Code...
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\DevSystem\Documents\GitHub\1st-Year-Comp-SCI-Project\Debug\Space Shooter SFML.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\DevSystem\Documents\GitHub\1st-Year-Comp-SCI-Project\Thor-2.0\lib" /LIBPATH:"C:\Users\DevSystem\Documents\GitHub\1st-Year-Comp-SCI-Project\SFML-2.4.0\lib" "thor-d.lib" "sfml-audio-d.lib" "sfml-graphics-d.lib" "sfml-window-d.lib" "sfml-system-d.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\DevSystem\Documents\GitHub\1st-Year-Comp-SCI-Project\Debug\Space Shooter SFML.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\DevSystem\Documents\GitHub\1st-Year-Comp-SCI-Project\Debug\Space Shooter SFML.lib" /MACHINE:X86 Debug\enemy.obj
-         Debug\entity.obj
-         Debug\Gamerun.obj
-         Debug\hud.obj
-         Debug\Main.obj
-         Debug\Particles.obj
-         Debug\pickup.obj
-         Debug\player.obj
-         Debug\projectile.obj
-         Debug\random.obj
-         Debug\textDisplay.obj
-         Space Shooter SFML.vcxproj -> C:\Users\DevSystem\Documents\GitHub\1st-Year-Comp-SCI-Project\Debug\Space Shooter SFML.exe
-     1>Done Building Project "C:\Users\DevSystem\Documents\GitHub\1st-Year-Comp-SCI-Project\Space Shooter SFML\Space Shooter SFML.vcxproj" (Rebuild target(s)).
-
-Build succeeded.
-
-Time Elapsed 00:00:19.81
+﻿  Gamerun.cpp
+c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\particles.h(22): warning C4083: expected ')'; found identifier 'C4305'
+c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\particles.h(28): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\particles.h(29): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(23): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(130): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(132): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(412): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(544): warning C4551: function call missing argument list
+c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(554): warning C4551: function call missing argument list
+  Space Shooter SFML.vcxproj -> C:\Users\almcb\Documents\GitHub\1st-Year-Comp-SCI-Project\Debug\Space Shooter SFML.exe
+  Space Shooter SFML.vcxproj -> C:\Users\almcb\Documents\GitHub\1st-Year-Comp-SCI-Project\Debug\Space Shooter SFML.pdb (Full PDB)

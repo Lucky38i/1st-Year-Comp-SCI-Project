@@ -58,6 +58,17 @@ void Gamerun::run()
 	Font font;
 	font = fontLoad("Objects/Pixel.ttf");
 
+	//Sets a base sound object
+	Sound sounds;
+
+	//Loads a sound for the coin pickup
+	SoundBuffer coinSound;
+	coinSound.loadFromFile("space-shooter/sounds/gold-2.wav");
+
+	//Loads a sound for the powerup pickup
+	SoundBuffer pickupSound;
+	pickupSound.loadFromFile("space-shooter/sounds/power-up-4.wav");
+
 	//Loads a player sprite to display
 	Texture texturePlayer;
 	texturePlayer = textureLoad("space-shooter/ships/2.png");
@@ -199,16 +210,22 @@ void Gamerun::run()
 				if (pickupArray[universalCounter].isCoin == true)
 				{
 					Player1.score += pickupArray[universalCounter].coinValue;
+					sounds.setBuffer(coinSound);
+					sounds.play();
 				}
 				else if (pickupArray[universalCounter].isPowerup_Fast == true)
 				{
 					Player1.powerUp_FireRate = true;
 					Player1.powerUp_Triple = false;
+					sounds.setBuffer(pickupSound);
+					sounds.play();
 				}
 				else if (pickupArray[universalCounter].isPowerup_Triple == true)
 				{
 					Player1.powerUp_Triple = true;
 					Player1.powerUp_FireRate = false;
+					sounds.setBuffer(pickupSound);
+					sounds.play();
 				}
 				pickupArray[universalCounter].destroy = true;
 			}

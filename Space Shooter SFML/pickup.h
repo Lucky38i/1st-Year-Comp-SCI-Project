@@ -17,7 +17,7 @@ public:
 	int coinValue = 100;
 	float dropSpeed = 2;
 	int coinChance = 3; // Drop % eg. 3 = 25% chance
-	int powerUpChance = 25; //Same rules as coinChance
+	int powerUpChance = 15; //Same rules as coinChance
 
 	pickup();
 	void update();
