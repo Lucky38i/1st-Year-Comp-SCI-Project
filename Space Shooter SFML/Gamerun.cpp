@@ -62,11 +62,11 @@ void Gamerun::run()
 	Music bgMusic;
 	bgMusic.openFromFile("space-shooter/music/1.ogg");
 	//Plays music
-	bgMusic.play();
+	//bgMusic.play();
 	bgMusic.setVolume(50);
 	bgMusic.setLoop(true);
 
-	//Sets a base sound objects
+	//Sets base sound objects
 	Sound pickupSounds;
 	Sound enemySounds;
 	Sound playerSounds;
@@ -90,6 +90,10 @@ void Gamerun::run()
 	//Loads a player sprite to display
 	Texture texturePlayer;
 	texturePlayer = textureLoad("space-shooter/ships/2.png");
+
+	//Loads a boss sprite to display
+	Texture textureBoss;
+	textureBoss = textureLoad("space-shooter/ships/8.png");
 
 	//Loads a coin sprite to display
 	Texture textureCoin;
@@ -151,8 +155,18 @@ void Gamerun::run()
 	enemy1.sprite.setTexture(textureRandomEnemy);
 	enemy1.rect.setSize(Vector2f(enemyX, enemyY));
 	enemy1.rect.setOrigin(Vector2f(enemy1.sprite.getLocalBounds().width, enemy1.sprite.getLocalBounds().height));
-	enemy1.rect.setPosition(MAX_WIDTH / 2, -2);
-	enemyArray.push_back(enemy1);
+	//enemy1.rect.setPosition(MAX_WIDTH / 2, -2);
+	//enemyArray.push_back(enemy1);
+
+	//Boss Objects
+	class enemy boss1;
+	boss1.sprite.setTexture(textureBoss);
+	boss1.rect.setSize(Vector2f(boss1.sprite.getLocalBounds().width, boss1.sprite.getLocalBounds().height));
+	boss1.rect.setOrigin(Vector2f(boss1.sprite.getLocalBounds().width, boss1.sprite.getLocalBounds().height));
+	boss1.hp = 50;
+	boss1.movementSpeed = 1;
+	boss1.enemySpawnRate = 200;
+	boss1.isBoss = true;
 
 	//Text Vector Array
 	vector<textDisplay>::const_iterator iter8;
@@ -198,6 +212,7 @@ void Gamerun::run()
 		}
 
 		window.clear(/*sf::Color::Black*/);
+
 		//Read's gameover is player dies
 		if (Player1.hp <= 0)
 		{
@@ -298,9 +313,7 @@ void Gamerun::run()
 			}
 		}
 		
-		cout << Player1.hp << endl; //Debug Health HP
-
-
+		//cout << Player1.hp << endl; //Debug Health HP
 
 		// Projectile collides with enemy
 		universalCounter = 0;
@@ -433,8 +446,6 @@ void Gamerun::run()
 			universalCounter++;
 		}
 
-
-
 		//Draw background
 		window.draw(spriteBG);
 
@@ -448,7 +459,24 @@ void Gamerun::run()
 			enemy1.rect.setPosition(generateRandom(window.getSize().x), -100);
 			enemyArray.push_back(enemy1);
 		}
-		
+
+		//Spawns Boss
+		/*
+		if (Player1.score % 100 == 0)
+		{
+			boss1.rect.setPosition(generateRandom(window.getSize().x), 100);
+			enemyArray.push_back(boss1);
+		}*/
+
+		int boss_apperance = 0;
+		if (Player1.score / 100 > boss_apperance)
+		{
+			boss_apperance++;
+			boss1.rect.setPosition(generateRandom(window.getSize().x), 100);
+			enemyArray.push_back(boss1);
+			enemy1.enemySpawnRate = 15;
+		}
+		cout << /*floor(Player1.score / 1000)*/ boss_apperance << endl;
 
 		//Fire projectile (Space Bar)
 		if (projectileElapsed.asSeconds() >= fireRate)
@@ -530,12 +558,12 @@ void Gamerun::run()
 			universalCounter = 0;
 			for (iter4 = enemyArray.begin(); iter4 != enemyArray.end(); iter4++)
 			{
-				enemyArray[universalCounter].wallCollision(MAX_WIDTH, enemyX);
+				enemyArray[universalCounter].wallCollision(MAX_WIDTH, enemyX, MAX_HEIGHT-400,87);
 				enemyArray[universalCounter].update();
 				enemyArray[universalCounter].updateMovement();
-				window.draw(enemyArray[universalCounter].sprite);
 				//window.draw(enemyArray[universalCounter].rect); //Debug Draw Enemy's rectangle
-				//cout << enemyArray[universalCounter].rect.getPosition().x << endl; //Debug Enemy X position
+				window.draw(enemyArray[universalCounter].sprite);
+				//cout << enemyArray[universalCounter].rect.getPosition().y << endl; //Debug Enemy X position
 				universalCounter++;
 			}
 

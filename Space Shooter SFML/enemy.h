@@ -16,6 +16,7 @@ public:
 	int lifeTime = 1000;
 	int deathValue = 10;
 	double enemySpawnRate = 0.5; //Lower = faster eg. 1.5 = spawn enemy every 1.5 seconds
+	
 
 	//Fixed Variables
 	int direction = 0; // 1 - left, 2 - right
@@ -23,6 +24,9 @@ public:
 	int counterLife = 0;
 	bool canMoveLeft = true;
 	bool canMoveRight = true;
+	bool canMoveUp = true;
+	bool canMoveDown = true;
+	bool isBoss = false;
 
 	bool alive = true;
 
@@ -30,7 +34,7 @@ public:
 	enemy();
 	void update();
 	void updateMovement();
-	void wallCollision(const int max_width, int dimensions);
+	void wallCollision(const int max_width, int dimensions, const int max_height, int bossDimensions);
 };
 
 #endif __enemy__
