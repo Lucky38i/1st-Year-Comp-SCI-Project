@@ -20,17 +20,13 @@ void enemy::update()
 	if (isBoss == false)
 	{
 		sprite.setRotation(180);
-	}
-
-	if (isBoss == false)
-	{
 		counterLife++;
+
 		if (counterLife >= lifeTime)
 		{
 			alive = false;
 		}
 	}
-
 }
 
 

@@ -162,7 +162,6 @@ void Gamerun::run()
 	class enemy boss1;
 	boss1.sprite.setTexture(textureBoss);
 	boss1.rect.setSize(Vector2f(boss1.sprite.getLocalBounds().width, boss1.sprite.getLocalBounds().height));
-	boss1.rect.setOrigin(Vector2f(boss1.sprite.getLocalBounds().width, boss1.sprite.getLocalBounds().height));
 	boss1.hp = 50;
 	boss1.movementSpeed = 1;
 	boss1.enemySpawnRate = 200;
@@ -458,6 +457,15 @@ void Gamerun::run()
 			enemySpawnClock.restart();
 			enemy1.rect.setPosition(generateRandom(window.getSize().x), -100);
 			enemyArray.push_back(enemy1);
+
+			int boss_apperance = 0;
+			if (Player1.score / 100 > boss_apperance)
+			{
+				boss_apperance++;
+				boss1.rect.setPosition(generateRandom(window.getSize().x), 100);
+				enemyArray.push_back(boss1);
+				enemy1.enemySpawnRate = 15;
+			}
 		}
 
 		//Spawns Boss
@@ -468,6 +476,7 @@ void Gamerun::run()
 			enemyArray.push_back(boss1);
 		}*/
 
+		/*
 		int boss_apperance = 0;
 		if (Player1.score / 100 > boss_apperance)
 		{
@@ -476,7 +485,7 @@ void Gamerun::run()
 			enemyArray.push_back(boss1);
 			enemy1.enemySpawnRate = 15;
 		}
-		cout << /*floor(Player1.score / 1000)*/ boss_apperance << endl;
+		*/
 
 		//Fire projectile (Space Bar)
 		if (projectileElapsed.asSeconds() >= fireRate)
