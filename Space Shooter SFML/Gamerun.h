@@ -52,12 +52,12 @@ public:
 	enemyDetails ENEMY_SHIPS[4];
 	
 	//Fixed Varibles
+	string gameState = "Game";
 	sf::Clock projectileClock; //Clock for the projectile fire rate
 	sf::Clock projectileClock1; // Clock for animation the projectile
 	sf::Clock collisionClock; //Clock for the rate of player health lost
 	sf::Clock PickupClock;	 //Clock for animating the pickup
 	sf::Clock particleClock; //Clock for updating the particle system
-	sf::Clock enemySpawnClock; //Clock used for spawning enemies
 	int universalCounter = 0;
 	int counter2 = 0;
 	int counter3 = 0;

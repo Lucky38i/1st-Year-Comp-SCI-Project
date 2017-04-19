@@ -19,6 +19,7 @@ public:
 	
 
 	//Fixed Variables
+	sf::Clock enemySpawnClock; //Clock used for spawning enemies
 	int direction = 0; // 1 - left, 2 - right
 	int counter = 0;
 	int counterLife = 0;
@@ -27,7 +28,6 @@ public:
 	bool canMoveUp = true;
 	bool canMoveDown = true;
 	bool isBoss = false;
-
 	bool alive = true;
 
 

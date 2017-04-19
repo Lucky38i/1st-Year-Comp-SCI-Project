@@ -1,12 +1,13 @@
 ﻿  Gamerun.cpp
-c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\particles.h(22): warning C4083: expected ')'; found identifier 'C4305'
-c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\particles.h(28): warning C4305: 'initializing': truncation from 'double' to 'float'
-c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\particles.h(29): warning C4305: 'initializing': truncation from 'double' to 'float'
-c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(23): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(156): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(458): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(465): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(621): warning C4551: function call missing argument list
-c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(631): warning C4551: function call missing argument list
-  Space Shooter SFML.vcxproj -> C:\Users\almcb\Documents\GitHub\1st-Year-Comp-SCI-Project\Debug\Space Shooter SFML.exe
-  Space Shooter SFML.vcxproj -> C:\Users\almcb\Documents\GitHub\1st-Year-Comp-SCI-Project\Debug\Space Shooter SFML.pdb (Full PDB)
+c:\users\n0696066\source\repos\1st-year-comp-sci-project\space shooter sfml\particles.h(22): warning C4083: expected ')'; found identifier 'C4305'
+c:\users\n0696066\source\repos\1st-year-comp-sci-project\space shooter sfml\particles.h(28): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\n0696066\source\repos\1st-year-comp-sci-project\space shooter sfml\particles.h(29): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\n0696066\source\repos\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(25): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\n0696066\source\repos\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(158): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\n0696066\source\repos\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(231): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\n0696066\source\repos\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(486): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\n0696066\source\repos\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(499): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\n0696066\source\repos\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(636): warning C4551: function call missing argument list
+c:\users\n0696066\source\repos\1st-year-comp-sci-project\space shooter sfml\gamerun.cpp(646): warning C4551: function call missing argument list
+  Space Shooter SFML.vcxproj -> C:\Users\n0696066\Source\Repos\1st-Year-Comp-SCI-Project\Debug\Space Shooter SFML.exe
+  Space Shooter SFML.vcxproj -> C:\Users\n0696066\Source\Repos\1st-Year-Comp-SCI-Project\Debug\Space Shooter SFML.pdb (Full PDB)
