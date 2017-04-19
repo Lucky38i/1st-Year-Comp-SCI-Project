@@ -44,6 +44,13 @@ void Gamerun::run()
 	spriteBG.setTexture(textureBG);
 	spriteBG.setScale(Vector2f(MAX_WIDTH / spriteBG.getLocalBounds().width, MAX_HEIGHT / spriteBG.getLocalBounds().height));
 
+	//Menu Background
+	Texture textureMenuBG;
+	textureMenuBG = textureLoad("space-shooter/backgrounds/4.png");
+	Sprite spriteMenuBG;
+	spriteMenuBG.setTexture(textureMenuBG);
+	spriteMenuBG.setScale(Vector2f(MAX_WIDTH / spriteMenuBG.getLocalBounds().width, MAX_HEIGHT / spriteMenuBG.getLocalBounds().height));
+
 	//Set the icon
 	Image icon;
 	if (!icon.loadFromFile("space-shooter/backgrounds/planet-1.png"))
@@ -53,9 +60,11 @@ void Gamerun::run()
 	}
 	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
-	//Sets the font
-	Font font;
-	font = fontLoad("Objects/Pixel.ttf");
+	//Sets the fonts
+	Font font_pixel;
+	font_pixel = fontLoad("Objects/Pixel.ttf");
+	Font font_space;
+	font_space = fontLoad("Objects/space age.ttf");
 
 	//Sets the music
 	Music bgMusic;
@@ -69,6 +78,7 @@ void Gamerun::run()
 	Sound pickupSounds;
 	Sound enemySounds;
 	Sound playerSounds;
+	Sound bossSounds;
 
 	//Loads a sound for the coin pickup
 	SoundBuffer coinSound;
@@ -171,15 +181,19 @@ void Gamerun::run()
 
 	//Text Object
 	class textDisplay textDisplay1;
-	textDisplay1.text.setFont(font);
+	textDisplay1.text.setFont(font_pixel);
 
 	//Score Text Object
 	class textDisplay scoreDisplay;
-	scoreDisplay.text.setFont(font);
+	scoreDisplay.text.setFont(font_pixel);
 	scoreDisplay.text.setColor(sf::Color::White);
 	scoreDisplay.text.setCharacterSize(15);
 	scoreDisplay.text.setPosition(0, 35);
 
+	//Title Text Object
+	class textDisplay titleText;
+	titleText.text.setFont(font_space);
+	titleText.text.setColor(Color::White);
 	//Pickupitem Vector Array
 	vector<pickup>::const_iterator iter11;
 	vector<pickup> pickupArray;
@@ -216,16 +230,6 @@ void Gamerun::run()
 		{
 			//Draw 
 			scoreDisplay.text.setString("Welcome");
-			window.draw(scoreDisplay.text);
-		}
-
-		//Show 'GameOver' Screen
-		if (gameState == "GameOver")
-		{
-			//Draw
-			scoreDisplay.text.setString("GameOver");
-			scoreDisplay.text.setCharacterSize(50);
-			scoreDisplay.text.setPosition(Vector2f(20, MAX_HEIGHT / 2));
 			window.draw(scoreDisplay.text);
 		}
 
@@ -369,6 +373,7 @@ void Gamerun::run()
 
 						if ((enemyArray[counter2].isBoss == true) && (enemyArray[counter2].hp <= 0))
 						{
+							cout << "Enemy spawn rate returned to normal" << endl;
 							boss1.enemySpawnClock.restart();
 							enemy1.enemySpawnRate = 0.5;
 						}
@@ -483,22 +488,25 @@ void Gamerun::run()
 				enemy1.rect.setPosition(generateRandom(window.getSize().x), -100);
 				enemyArray.push_back(enemy1);
 			}
-			
+
 			//Spawn Boss
 			if (spawnBossElapsed.asSeconds() >= boss1.enemySpawnRate)
 			{
 				boss1.enemySpawnClock.restart();
-				int boss_apperance = 0;
-				if (Player1.score / 1000 > boss_apperance)
+				if (last_score != Player1.score / 1000)
 				{
-					cout << "True" << endl;
-					boss_apperance++;
+					last_score = Player1.score / 1000;
+					//spawn boss
 					boss1.rect.setPosition(generateRandom(window.getSize().x), 100);
 					enemyArray.push_back(boss1);
+
+					//Reduces enemy spawn rate
 					boss1.enemySpawnRate = 20000;
 					enemy1.enemySpawnRate = 5;
+					
 				}
 			}
+
 
 			//Fire projectile (Space Bar)
 			if (projectileElapsed.asSeconds() >= fireRate)
@@ -620,7 +628,24 @@ void Gamerun::run()
 			window.draw(health.sprite);
 
 		}
-			window.display();//End current frame
+
+		//Show 'GameOver' Screen
+		if (gameState == "GameOver")
+		{
+			//display 'Gameover' Text
+			titleText.text.setString("score: "+ to_string(Player1.score));
+			titleText.text.setCharacterSize(50);
+			titleText.text.setPosition(Vector2f(MAX_WIDTH/2-180, 50));
+
+			//Display backround
+			window.draw(spriteMenuBG);
+			
+			//Display player's score
+			window.draw(titleText.text);
+		}
+
+		window.display();//End current frame
+
 		}
 		return;
 	}
@@ -643,6 +668,8 @@ Font Gamerun::fontLoad(string filename)
 	}
 	return font;
 }
+
+
 
 
 

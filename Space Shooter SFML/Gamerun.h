@@ -63,6 +63,7 @@ public:
 	int counter3 = 0;
 	int enemyX;
 	int enemyY;
+	int last_score = 0;
 
 
 	Gamerun();
