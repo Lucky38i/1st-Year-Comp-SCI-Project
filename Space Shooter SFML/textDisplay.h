@@ -19,6 +19,7 @@ public:
 
 	textDisplay();
 	void update();
+	void rectUpdate();
 	//void updateMovement();
 };
 

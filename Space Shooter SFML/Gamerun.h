@@ -52,18 +52,20 @@ public:
 	enemyDetails ENEMY_SHIPS[4];
 	
 	//Fixed Varibles
-	string gameState = "Game";
+	string gameState = "Menu";
 	sf::Clock projectileClock; //Clock for the projectile fire rate
 	sf::Clock projectileClock1; // Clock for animation the projectile
 	sf::Clock collisionClock; //Clock for the rate of player health lost
 	sf::Clock PickupClock;	 //Clock for animating the pickup
 	sf::Clock particleClock; //Clock for updating the particle system
+	sf::Clock buttonClock; //Clock for button sound 
 	int universalCounter = 0;
 	int counter2 = 0;
 	int counter3 = 0;
 	int enemyX;
 	int enemyY;
-	int last_score = 0;
+	int boss_apperance = 0;
+	
 
 
 	Gamerun();

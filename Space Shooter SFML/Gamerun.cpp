@@ -10,6 +10,7 @@ Gamerun::Gamerun()
 void Gamerun::run()
 {
 	ifstream enemyShips("Objects/enemyship.txt");
+	static bool played;
 
 	//Stores values from enemyShips into enemy_ships array
 	for (int i = 0; i < 4; i++)
@@ -59,19 +60,23 @@ void Gamerun::run()
 		return;
 	}
 	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-
+	
 	//Sets the fonts
 	Font font_pixel;
 	font_pixel = fontLoad("Objects/Pixel.ttf");
+
 	Font font_space;
 	font_space = fontLoad("Objects/space age.ttf");
+
+	Font future_thin;
+	future_thin = fontLoad("Objects/kenvector_future_thin.ttf");
 
 	//Sets the music
 	Music bgMusic;
 	bgMusic.openFromFile("space-shooter/music/1.ogg");
 	//Plays music
-	bgMusic.play();
-	bgMusic.setVolume(50);
+	//bgMusic.play();
+	bgMusic.setVolume(30);
 	bgMusic.setLoop(true);
 
 	//Sets base sound objects
@@ -79,6 +84,7 @@ void Gamerun::run()
 	Sound enemySounds;
 	Sound playerSounds;
 	Sound bossSounds;
+	Sound buttonSounds;
 
 	//Loads a sound for the coin pickup
 	SoundBuffer coinSound;
@@ -95,6 +101,10 @@ void Gamerun::run()
 	//Loads a sound for a destroyed enemy
 	SoundBuffer enemyDestroyedSound;
 	enemyDestroyedSound.loadFromFile("space-shooter/sounds/enemyexplosion.wav");
+
+	//Loads a sound for buttons
+	SoundBuffer buttonpressSound;
+	buttonpressSound.loadFromFile("space-shooter/sounds/buttonselect.wav");
 
 	//Loads a player sprite to display
 	Texture texturePlayer;
@@ -194,6 +204,19 @@ void Gamerun::run()
 	class textDisplay titleText;
 	titleText.text.setFont(font_space);
 	titleText.text.setColor(Color::White);
+
+	//Play Game Object
+	class textDisplay playText;
+	playText.text.setFont(font_pixel);
+
+	//Exit Text Object
+	class textDisplay exitText;
+	exitText.text.setFont(font_pixel);
+
+	//Highscore text Object
+	class textDisplay highscoresText;
+	highscoresText.text.setFont(font_pixel);
+
 	//Pickupitem Vector Array
 	vector<pickup>::const_iterator iter11;
 	vector<pickup> pickupArray;
@@ -220,17 +243,101 @@ void Gamerun::run()
 			{
 				window.close();
 			}
+
+			
 		}
 
 		window.clear(/*sf::Color::Black*/);
 
+		//Get the mouse's position relative to the window
+		Vector2i mousePos = Mouse::getPosition(window);
+		entity mouseRect;
+		mouseRect.rect.setFillColor(Color::Blue);
+		mouseRect.rect.setSize(Vector2f(8, 8));
+
+		//Links mouse rectangle to the pos of the mouse
+		mouseRect.rect.setPosition(Vector2f(mousePos.x, mousePos.y));
 
 		//Show Menu Screen
 		if (gameState == "Menu")
 		{
-			//Draw 
-			scoreDisplay.text.setString("Welcome");
-			window.draw(scoreDisplay.text);
+			buttonSounds.setBuffer(buttonpressSound);
+			
+			
+			//Set 'Title' text settings
+			titleText.text.setCharacterSize(40);
+			titleText.text.setString("  Welcome to\nSpace Shooter");
+			titleText.text.setColor(Color(148, 88, 201));
+			titleText.text.setPosition(Vector2f(MAX_WIDTH / 2 - titleText.text.getGlobalBounds().width / 2, 20));
+
+			//Set 'Play' text settings
+			playText.text.setString("PLAY!");
+			playText.text.setColor(Color(148, 88, 201));
+			playText.text.setPosition(Vector2f(MAX_WIDTH/2-playText.text.getGlobalBounds().width/2, 200));
+
+			highscoresText.text.setString("HIGHSCORES");
+			highscoresText.text.setColor(Color(148, 88, 201));
+			highscoresText.text.setPosition(Vector2f(MAX_WIDTH / 2 - highscoresText.text.getGlobalBounds().width / 2, 380));
+
+			exitText.text.setString("EXIT");
+			exitText.text.setColor(Color(148, 88, 201));
+			exitText.text.setPosition(Vector2f(MAX_WIDTH / 2 - exitText.text.getGlobalBounds().width / 2, 560));
+
+			//Mouse collision with text
+			if (playText.rect.getGlobalBounds().intersects(mouseRect.rect.getGlobalBounds()))
+			{
+				if (!played)
+				{
+					buttonSounds.play();
+					played = true;
+				}
+
+				//Starts Game
+				playText.text.setColor(Color(148, 88, 201,200));
+				if (Mouse::isButtonPressed(Mouse::Left))
+				{
+					gameState = "Game";
+				}
+			}
+
+			if (highscoresText.rect.getGlobalBounds().intersects(mouseRect.rect.getGlobalBounds()))
+			{
+				highscoresText.text.setColor(Color(148, 88, 201, 200));
+				buttonSounds.play();
+
+				//Open highscores screen
+				if (Mouse::isButtonPressed(Mouse::Left))
+				{
+					gameState = "HighScore";
+				}
+			}
+
+			if (exitText.rect.getGlobalBounds().intersects(mouseRect.rect.getGlobalBounds()))
+			{
+				exitText.text.setColor(Color(148, 88, 201, 200));
+				buttonSounds.play();
+				
+				if (Mouse::isButtonPressed(Mouse::Left))
+				{
+					window.close();
+				}
+			}
+
+			//Update text rectangle pos
+			playText.rectUpdate();
+			titleText.rectUpdate();
+			exitText.rectUpdate();
+			highscoresText.rectUpdate();
+
+			//Draw Text objects
+			window.draw(titleText.text);
+			window.draw(playText.text);
+			window.draw(highscoresText.text);
+			window.draw(exitText.text);
+
+			//played = false;
+			
+			
 		}
 
 		//Show highscores Screen
@@ -374,7 +481,7 @@ void Gamerun::run()
 						if ((enemyArray[counter2].isBoss == true) && (enemyArray[counter2].hp <= 0))
 						{
 							cout << "Enemy spawn rate returned to normal" << endl;
-							boss1.enemySpawnClock.restart();
+							boss1.spawned = false;
 							enemy1.enemySpawnRate = 0.5;
 						}
 					}
@@ -490,22 +597,23 @@ void Gamerun::run()
 			}
 
 			//Spawn Boss
-			if (spawnBossElapsed.asSeconds() >= boss1.enemySpawnRate)
+			if (boss1.spawned == false)
 			{
-				boss1.enemySpawnClock.restart();
-				if (last_score != Player1.score / 1000)
+				cout << "true " << endl;
+				if (Player1.score / 1000 > boss_apperance)
 				{
-					last_score = Player1.score / 1000;
+					cout << "boss spawn" << endl;
+					boss_apperance++;
 					//spawn boss
 					boss1.rect.setPosition(generateRandom(window.getSize().x), 100);
 					enemyArray.push_back(boss1);
+					boss1.spawned = true;
 
 					//Reduces enemy spawn rate
-					boss1.enemySpawnRate = 20000;
 					enemy1.enemySpawnRate = 5;
-					
 				}
 			}
+		
 
 
 			//Fire projectile (Space Bar)

@@ -29,6 +29,7 @@ public:
 	bool canMoveDown = true;
 	bool isBoss = false;
 	bool alive = true;
+	bool spawned = false;
 
 
 	enemy();
