@@ -19,7 +19,7 @@ I understand that it is up to me and me alone to ensure that I submit my full an
 
 I understand that the above rules apply even in the eventuality of computer or other information technology failures.
 
-Software used
+# Software used
 I have used the following from these sources:
 
 SFML
