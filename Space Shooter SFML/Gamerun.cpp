@@ -9,8 +9,11 @@ Gamerun::Gamerun()
 
 void Gamerun::run()
 {
+	//Inputs files for reading
 	ifstream enemyShips("Objects/enemyship.txt");
-	static bool played;
+	ifstream hsFile("Objects/highscore.txt");
+	static bool played = false;
+	static bool pressed = false;
 
 	//Stores values from enemyShips into enemy_ships array
 	for (int i = 0; i < 4; i++)
@@ -18,6 +21,20 @@ void Gamerun::run()
 		enemyShips >> ENEMY_SHIPS[i].name >> ENEMY_SHIPS[i].dimensionx >> ENEMY_SHIPS[i].dimensiony;
 	}
 	enemyShips.close();
+
+	//Stores values from highscore txt file into highsore array
+	for (int i = 0; i < 4; i++)
+	{
+		hsFile >> highScore[i].name >> highScore[i].score;
+	}
+	hsFile.close();
+
+	//Varibles for finding highest Score
+	int indexHighestScore;
+	double highestScore;
+
+	indexHighestScore = 0;
+	highestScore = highScore[indexHighestScore].score;
 
 	//Randomly picks a enemy ship from the array and loads the texture
 	srand(time(0));
@@ -75,7 +92,7 @@ void Gamerun::run()
 	Music bgMusic;
 	bgMusic.openFromFile("space-shooter/music/1.ogg");
 	//Plays music
-	//bgMusic.play();
+	bgMusic.play();
 	bgMusic.setVolume(30);
 	bgMusic.setLoop(true);
 
@@ -157,7 +174,7 @@ void Gamerun::run()
 	Player1.sprite.setTexture(texturePlayer);
 
 	//Projectile Vector Array
-	vector<projectile>::const_iterator iter;
+	vector<projectile>::const_iterator projectileIter;
 	vector<projectile> projectileArray;
 
 	//Projectile Object
@@ -166,7 +183,7 @@ void Gamerun::run()
 	projectile1.sprite.setTextureRect(IntRect(0, 0, 14, 22));
 
 	//Enemy Vector Array
-	vector<enemy>::const_iterator iter4;
+	vector<enemy>::const_iterator enemyIter;
 	vector<enemy> enemyArray;
 
 	//enemy Object
@@ -186,7 +203,7 @@ void Gamerun::run()
 	boss1.isBoss = true;
 
 	//Text Vector Array
-	vector<textDisplay>::const_iterator iter8;
+	vector<textDisplay>::const_iterator textIter;
 	vector<textDisplay> textDisplayArray;
 
 	//Text Object
@@ -217,8 +234,21 @@ void Gamerun::run()
 	class textDisplay highscoresText;
 	highscoresText.text.setFont(font_pixel);
 
+	//Score text object
+	class textDisplay playerScore;
+	playerScore.text.setFont(font_pixel);
+
+	//Player name text object
+	pName.setFont(font_pixel);
+
+	//Score 3 text object
+	score3.setFont(font_pixel);
+
+	//Score 4 text object
+	score4.setFont(font_pixel);
+
 	//Pickupitem Vector Array
-	vector<pickup>::const_iterator iter11;
+	vector<pickup>::const_iterator pickupIter;
 	vector<pickup> pickupArray;
 
 	//Pickupitem Object
@@ -229,7 +259,6 @@ void Gamerun::run()
 	class Particles particleSystem;
 	particleSystem.system.setTexture(textureParticle);
 	thor::PolarVector2f velocity(30.f, 90.f);
-
 
 	//Initialize window
 	while (window.isOpen())
@@ -244,10 +273,29 @@ void Gamerun::run()
 				window.close();
 			}
 
-			
+			//Texts in keyboard input 
+			if (gameState == "HighScore")
+			{
+				if (event.type == sf::Event::TextEntered)
+				{
+					if ((event.KeyPressed == sf::Keyboard::BackSpace) && (pString.size() != 0))
+					{
+						pString.pop_back();
+						
+					}
+					else if (event.text.unicode < 128)
+					{
+						if (pString.size() <= 2)
+						{
+							pString += (char)event.text.unicode;
+							pName.setString(pString);
+						}
+					}
+				}
+			}
 		}
 
-		window.clear(/*sf::Color::Black*/);
+		window.clear();
 
 		//Get the mouse's position relative to the window
 		Vector2i mousePos = Mouse::getPosition(window);
@@ -275,10 +323,12 @@ void Gamerun::run()
 			playText.text.setColor(Color(148, 88, 201));
 			playText.text.setPosition(Vector2f(MAX_WIDTH/2-playText.text.getGlobalBounds().width/2, 200));
 
+			//Set 'Highscores' text settings
 			highscoresText.text.setString("HIGHSCORES");
 			highscoresText.text.setColor(Color(148, 88, 201));
 			highscoresText.text.setPosition(Vector2f(MAX_WIDTH / 2 - highscoresText.text.getGlobalBounds().width / 2, 380));
 
+			//Set 'Exit' text settings
 			exitText.text.setString("EXIT");
 			exitText.text.setColor(Color(148, 88, 201));
 			exitText.text.setPosition(Vector2f(MAX_WIDTH / 2 - exitText.text.getGlobalBounds().width / 2, 560));
@@ -286,6 +336,7 @@ void Gamerun::run()
 			//Mouse collision with text
 			if (playText.rect.getGlobalBounds().intersects(mouseRect.rect.getGlobalBounds()))
 			{
+				
 				if (!played)
 				{
 					buttonSounds.play();
@@ -300,10 +351,14 @@ void Gamerun::run()
 				}
 			}
 
-			if (highscoresText.rect.getGlobalBounds().intersects(mouseRect.rect.getGlobalBounds()))
+			else if (highscoresText.rect.getGlobalBounds().intersects(mouseRect.rect.getGlobalBounds()))
 			{
 				highscoresText.text.setColor(Color(148, 88, 201, 200));
-				buttonSounds.play();
+				if (!played)
+				{
+					buttonSounds.play();
+					played = true;
+				}
 
 				//Open highscores screen
 				if (Mouse::isButtonPressed(Mouse::Left))
@@ -312,15 +367,26 @@ void Gamerun::run()
 				}
 			}
 
-			if (exitText.rect.getGlobalBounds().intersects(mouseRect.rect.getGlobalBounds()))
+			else if (exitText.rect.getGlobalBounds().intersects(mouseRect.rect.getGlobalBounds()))
 			{
 				exitText.text.setColor(Color(148, 88, 201, 200));
-				buttonSounds.play();
-				
+				if (!played)
+				{
+					buttonSounds.play();
+					played = true;
+				}
+
+				//Exits Game
 				if (Mouse::isButtonPressed(Mouse::Left))
 				{
 					window.close();
 				}
+
+			}
+
+			else
+			{
+				played = false;
 			}
 
 			//Update text rectangle pos
@@ -334,16 +400,122 @@ void Gamerun::run()
 			window.draw(playText.text);
 			window.draw(highscoresText.text);
 			window.draw(exitText.text);
-
-			//played = false;
-			
-			
+	
 		}
 
 		//Show highscores Screen
 		if (gameState == "HighScore")
 		{
-			break;
+			if (Player1.hp <= 0)
+			{
+
+				//Set 'Title' text settings
+				titleText.text.setCharacterSize(40);
+				titleText.text.setColor(Color(148, 88, 201));
+				titleText.text.setPosition(Vector2f(MAX_WIDTH / 2 - titleText.text.getGlobalBounds().width / 2, 20));
+				titleText.text.setString("You Lose");
+
+				//Set 'PlayerScore' text settings
+				playerScore.text.setCharacterSize(20);
+				playerScore.text.setColor(Color(148, 88, 201));
+				playerScore.text.setPosition(Vector2f(MAX_WIDTH / 2 - playerScore.text.getGlobalBounds().width / 2, 150));
+				playerScore.text.setString("Your score was:");
+
+				//Set 'Highscores' text settings
+				highscoresText.text.setCharacterSize(20);
+				highscoresText.text.setColor(Color(148, 88, 201));
+				highscoresText.text.setPosition(Vector2f(MAX_WIDTH / 2 - highscoresText.text.getGlobalBounds().width / 2, 180));
+				highscoresText.text.setString(to_string(Player1.score));
+
+				//Set 'Name' text settings
+				playText.text.setCharacterSize(20);
+				playText.text.setString("Enter your initials");
+				playText.text.setColor(Color(148, 88, 201));
+				playText.text.setPosition(Vector2f(MAX_WIDTH / 2 - playText.text.getGlobalBounds().width / 2, 250));
+
+				//Set 'Name' text settings
+				pName.setCharacterSize(25);
+				pName.setColor(Color(148, 88, 201));
+				pName.setPosition(Vector2f(MAX_WIDTH / 2 - pName.getGlobalBounds().width / 2, 280));
+
+				//Updates highscores system
+
+				if (Keyboard::isKeyPressed(Keyboard::Return))
+				{
+					if (Player1.score > highScore[3].score)
+					{
+						highScore[3].score = Player1.score;
+						highScore[3].name = pString;
+					}
+					window.close();
+				}
+				window.draw(titleText.text);
+				window.draw(playerScore.text);
+				window.draw(highscoresText.text);
+				window.draw(playText.text);
+				window.draw(pName);
+			}
+			else
+			{
+				//Set Score1 text settings
+				titleText.text.setFont(font_pixel);
+				titleText.text.setCharacterSize(40);
+				titleText.text.setColor(Color(148, 88, 201));
+				titleText.text.setPosition(Vector2f(MAX_WIDTH / 4 - titleText.text.getGlobalBounds().width / 2, 100));
+				titleText.text.setString(highScore[0].name);
+
+				pName.setCharacterSize(40);
+				pName.setColor(Color(148, 88, 201));
+				pName.setPosition(Vector2f(MAX_WIDTH / 4 + pName.getGlobalBounds().width + 50, 100));
+				pName.setString(to_string(highScore[0].score));
+
+				//Set Score2 text settings
+				playerScore.text.setCharacterSize(40);
+				playerScore.text.setColor(Color(148, 88, 201));
+				playerScore.text.setPosition(Vector2f(MAX_WIDTH / 4 - playerScore.text.getGlobalBounds().width / 2, 180));
+				playerScore.text.setString(highScore[1].name);
+
+				exitText.text.setCharacterSize(40);
+				exitText.text.setColor(Color(148, 88, 201));
+				exitText.text.setPosition(Vector2f(MAX_WIDTH / 4 + exitText.text.getGlobalBounds().width + 50, 180));
+				exitText.text.setString(to_string(highScore[1].score));
+
+				//Set Score 3 text settings
+				highscoresText.text.setCharacterSize(40);
+				highscoresText.text.setColor(Color(148, 88, 201));
+				highscoresText.text.setPosition(Vector2f(MAX_WIDTH / 4 - highscoresText.text.getGlobalBounds().width / 2, 260));
+				highscoresText.text.setString(highScore[2].name);
+
+				score3.setCharacterSize(40);
+				score3.setColor(Color(148, 88, 201));
+				score3.setPosition(Vector2f(MAX_WIDTH / 4 + score3.getGlobalBounds().width + 50, 260));
+				score3.setString(to_string(highScore[2].score));
+
+				//Set Score 4 text settings
+				playText.text.setCharacterSize(40);
+				playText.text.setColor(Color(148, 88, 201));
+				playText.text.setPosition(Vector2f(MAX_WIDTH / 4 - playText.text.getGlobalBounds().width / 2, 340));
+				playText.text.setString(highScore[3].name);
+
+				score4.setCharacterSize(40);
+				score4.setColor(Color(148, 88, 201));
+				score4.setPosition(Vector2f(MAX_WIDTH / 4 + pName.getGlobalBounds().width + 50, 340));
+				score4.setString(to_string(highScore[3].score));
+
+				if (Keyboard::isKeyPressed(Keyboard::BackSpace))
+				{
+					gameState = "Menu";
+				}
+
+				window.draw(titleText.text);
+				window.draw(playerScore.text);
+				window.draw(highscoresText.text);
+				window.draw(playText.text);
+				window.draw(pName);
+				window.draw(exitText.text);
+				window.draw(score3);
+				window.draw(score4);
+			}
 		}
 
 		//Run Game
@@ -365,19 +537,18 @@ void Gamerun::run()
 			Time spawnBossElapsed = boss1.enemySpawnClock.getElapsedTime();
 			Time powerUpElapsed = Player1.powerUpClock.getElapsedTime();
 
-
 			//Player collides with boundaries
 			Player1.wallCollision(MAX_WIDTH, 20);
 
 			//Shows gameover screen if player dies
 			if (Player1.hp <= 0)
 			{
-				gameState = "GameOver";
+				gameState = "HighScore";
 			}
 
 			//Player collides with pickup
 			universalCounter = 0;
-			for (iter11 = pickupArray.begin(); iter11 != pickupArray.end(); iter11++)
+			for (pickupIter = pickupArray.begin(); pickupIter != pickupArray.end(); pickupIter++)
 			{
 				if (Player1.rect.getGlobalBounds().intersects(pickupArray[universalCounter].rect.getGlobalBounds()))
 				{
@@ -424,7 +595,7 @@ void Gamerun::run()
 				collisionClock.restart();
 
 				universalCounter = 0;
-				for (iter4 = enemyArray.begin(); iter4 != enemyArray.end(); iter4++)
+				for (enemyIter = enemyArray.begin(); enemyIter != enemyArray.end(); enemyIter++)
 				{
 					if (Player1.rect.getGlobalBounds().intersects(enemyArray[universalCounter].rect.getGlobalBounds()))
 					{
@@ -451,48 +622,47 @@ void Gamerun::run()
 
 			// Projectile collides with enemy
 			universalCounter = 0;
-			for (iter = projectileArray.begin(); iter != projectileArray.end(); iter++)
+			for (projectileIter = projectileArray.begin(); projectileIter != projectileArray.end(); projectileIter++)
 			{
-				counter2 = 0;
-				for (iter4 = enemyArray.begin(); iter4 != enemyArray.end(); iter4++)
+				collisionCounter = 0;
+				for (enemyIter = enemyArray.begin(); enemyIter != enemyArray.end(); enemyIter++)
 				{
-					if (projectileArray[universalCounter].rect.getGlobalBounds().intersects(enemyArray[counter2].rect.getGlobalBounds()))
+					if (projectileArray[universalCounter].rect.getGlobalBounds().intersects(enemyArray[collisionCounter].rect.getGlobalBounds()))
 					{
 						projectileArray[universalCounter].destroy = true;
 
 						//Damage Text Display
 						textDisplay1.text.setString(to_string(projectileArray[universalCounter].attackDamage));
-						textDisplay1.text.setPosition(enemyArray[counter2].rect.getPosition().x - enemyArray[counter2].rect.getSize().x / 2,
-							enemyArray[counter2].rect.getPosition().y - enemyArray[counter2].rect.getSize().y / 2);
+						textDisplay1.text.setPosition(enemyArray[collisionCounter].rect.getPosition().x - enemyArray[collisionCounter].rect.getSize().x / 2,
+							enemyArray[collisionCounter].rect.getPosition().y - enemyArray[collisionCounter].rect.getSize().y / 2);
 						textDisplayArray.push_back(textDisplay1);
 
-						enemyArray[counter2].hp -= projectileArray[universalCounter].attackDamage;
+						enemyArray[collisionCounter].hp -= projectileArray[universalCounter].attackDamage;
 						//Debug Enemy HP & Attack damage
-						//cout << "HP left " << enemyArray[counter2].hp << " attack damage " << projectileArray[universalCounter].attackDamage << endl;
+						//cout << "HP left " << enemyArray[collisionCounter].hp << " attack damage " << projectileArray[universalCounter].attackDamage << endl;
 
-						if (enemyArray[counter2].hp <= 0)
+						if (enemyArray[collisionCounter].hp <= 0)
 						{
-							enemyArray[counter2].alive = false;
+							enemyArray[collisionCounter].alive = false;
 							enemySounds.setBuffer(enemyDestroyedSound);
 							enemySounds.play();
-							Player1.score += enemyArray[counter2].deathValue;
+							Player1.score += enemyArray[collisionCounter].deathValue;
 						}
 
-						if ((enemyArray[counter2].isBoss == true) && (enemyArray[counter2].hp <= 0))
+						if ((enemyArray[collisionCounter].isBoss == true) && (enemyArray[collisionCounter].hp <= 0))
 						{
-							cout << "Enemy spawn rate returned to normal" << endl;
 							boss1.spawned = false;
 							enemy1.enemySpawnRate = 0.5;
 						}
 					}
-					counter2++;
+					collisionCounter++;
 				}
 				universalCounter++;
 			}
 
 			//Delete Dead Enemy
 			universalCounter = 0;
-			for (iter4 = enemyArray.begin(); iter4 != enemyArray.end(); iter4++)
+			for (enemyIter = enemyArray.begin(); enemyIter != enemyArray.end(); enemyIter++)
 			{
 				if (enemyArray[universalCounter].alive == false)
 				{
@@ -538,7 +708,7 @@ void Gamerun::run()
 						pickupArray.push_back(pickupItem);
 					}
 
-					enemyArray.erase(iter4);
+					enemyArray.erase(enemyIter);
 					break;
 				}
 				universalCounter++;
@@ -546,12 +716,12 @@ void Gamerun::run()
 
 			//Delete projectile
 			universalCounter = 0;
-			for (iter = projectileArray.begin(); iter != projectileArray.end(); iter++)
+			for (projectileIter = projectileArray.begin(); projectileIter != projectileArray.end(); projectileIter++)
 			{
 				if (projectileArray[universalCounter].destroy == true)
 				{
 					//cout << "projectile destroyed" << endl; //Debug for projectile destroyed
-					projectileArray.erase(iter);
+					projectileArray.erase(projectileIter);
 					break;
 				}
 
@@ -560,11 +730,11 @@ void Gamerun::run()
 
 			//Delete text
 			universalCounter = 0;
-			for (iter8 = textDisplayArray.begin(); iter8 != textDisplayArray.end(); iter8++)
+			for (textIter = textDisplayArray.begin(); textIter != textDisplayArray.end(); textIter++)
 			{
 				if (textDisplayArray[universalCounter].destroy == true)
 				{
-					textDisplayArray.erase(iter8);
+					textDisplayArray.erase(textIter);
 					break;
 				}
 				universalCounter++;
@@ -572,11 +742,11 @@ void Gamerun::run()
 
 			//Delete Pickup
 			universalCounter = 0;
-			for (iter11 = pickupArray.begin(); iter11 != pickupArray.end(); iter11++)
+			for (pickupIter = pickupArray.begin(); pickupIter != pickupArray.end(); pickupIter++)
 			{
 				if (pickupArray[universalCounter].destroy == true)
 				{
-					pickupArray.erase(iter11);
+					pickupArray.erase(pickupIter);
 					break;
 				}
 				universalCounter++;
@@ -599,10 +769,8 @@ void Gamerun::run()
 			//Spawn Boss
 			if (boss1.spawned == false)
 			{
-				cout << "true " << endl;
 				if (Player1.score / 1000 > boss_apperance)
 				{
-					cout << "boss spawn" << endl;
 					boss_apperance++;
 					//spawn boss
 					boss1.rect.setPosition(generateRandom(window.getSize().x), 100);
@@ -613,8 +781,6 @@ void Gamerun::run()
 					enemy1.enemySpawnRate = 5;
 				}
 			}
-		
-
 
 			//Fire projectile (Space Bar)
 			if (projectileElapsed.asSeconds() >= fireRate)
@@ -657,7 +823,7 @@ void Gamerun::run()
 
 			//Draw Pickup
 			universalCounter = 0;
-			for (iter11 = pickupArray.begin(); iter11 != pickupArray.end(); iter11++)
+			for (pickupIter = pickupArray.begin(); pickupIter != pickupArray.end(); pickupIter++)
 			{
 				pickupArray[universalCounter].update();
 				if (pickupElapsed.asSeconds() >= 0.1)
@@ -679,7 +845,7 @@ void Gamerun::run()
 
 			//Draw Projectile
 			universalCounter = 0;
-			for (iter = projectileArray.begin(); iter != projectileArray.end(); iter++)
+			for (projectileIter = projectileArray.begin(); projectileIter != projectileArray.end(); projectileIter++)
 			{
 				projectileArray[universalCounter].update(); // Update projectile
 				if (projectileElapsed1.asSeconds() >= 0.2)
@@ -694,7 +860,7 @@ void Gamerun::run()
 
 			//Draw Enemy
 			universalCounter = 0;
-			for (iter4 = enemyArray.begin(); iter4 != enemyArray.end(); iter4++)
+			for (enemyIter = enemyArray.begin(); enemyIter != enemyArray.end(); enemyIter++)
 			{
 				enemyArray[universalCounter].wallCollision(MAX_WIDTH, enemyX, MAX_HEIGHT - 400, 87);
 				enemyArray[universalCounter].update();
@@ -715,7 +881,7 @@ void Gamerun::run()
 
 			//Draw Text
 			universalCounter = 0;
-			for (iter8 = textDisplayArray.begin(); iter8 != textDisplayArray.end(); iter8++)
+			for (textIter = textDisplayArray.begin(); textIter != textDisplayArray.end(); textIter++)
 			{
 				textDisplayArray[universalCounter].update();
 				window.draw(textDisplayArray[universalCounter].text);
@@ -734,7 +900,6 @@ void Gamerun::run()
 			//Draw health
 			window.draw(healthBar.sprite);
 			window.draw(health.sprite);
-
 		}
 
 		//Show 'GameOver' Screen
@@ -755,6 +920,36 @@ void Gamerun::run()
 		window.display();//End current frame
 
 		}
+
+		//Output file for highscores
+		ofstream hsFileOut("Objects/highscore.txt");
+
+		//Sorts Highscores
+		int temp;
+		string tempName;
+		for (int i = 0; i <= 3; i++)
+		{
+			for (int j = i + 1; j <= 3; j++)
+			{
+				if (highScore[i].score<highScore[j].score)
+				{
+					temp = highScore[j].score;
+					tempName = highScore[j].name;
+					highScore[j].score = highScore[i].score;
+					highScore[j].name = highScore[i].name;
+					highScore[i].name = tempName;
+					highScore[i].score = temp;
+				}
+			}
+		}
+
+		//Outputs scores to txt file
+		for (int i = 0; i < 4; i++)
+		{
+			hsFileOut << highScore[i].name << " " << highScore[i].score << endl;
+		}
+		hsFileOut.close();
+
 		return;
 	}
 Texture Gamerun::textureLoad(string filename)
