@@ -74,6 +74,7 @@ public:
 	sf::Clock AlertClock; //Clock for button sound 
 	int universalCounter = 0;
 	int collisionCounter = 0;
+	int hsCounter = 0;
 	int enemyX;
 	int enemyY;
 	int boss_apperance = 0;

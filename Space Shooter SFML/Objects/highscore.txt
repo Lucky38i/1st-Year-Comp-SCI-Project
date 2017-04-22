@@ -1,4 +1,4 @@
-aj 4870
-tst 1450
 afp 1130
 asd 960
+tvr 520
+gjs 516

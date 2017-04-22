@@ -13,6 +13,7 @@ void Gamerun::run()
 	ifstream enemyShips("Objects/enemyship.txt");
 	ifstream hsFile("Objects/highscore.txt");
 	static bool played = false;
+	static bool pressed = false;
 
 	//Stores values from enemyShips into enemy_ships array
 	for (int i = 0; i < 4; i++)
@@ -27,6 +28,13 @@ void Gamerun::run()
 		hsFile >> highScore[i].name >> highScore[i].score;
 	}
 	hsFile.close();
+
+	//Varibles for finding highest Score
+	int indexHighestScore;
+	double highestScore;
+
+	indexHighestScore = 0;
+	highestScore = highScore[indexHighestScore].score;
 
 	//Randomly picks a enemy ship from the array and loads the texture
 	srand(time(0));
@@ -53,6 +61,13 @@ void Gamerun::run()
 	Sprite spriteBG;
 	spriteBG.setTexture(textureBG);
 	spriteBG.setScale(Vector2f(MAX_WIDTH / spriteBG.getLocalBounds().width, MAX_HEIGHT / spriteBG.getLocalBounds().height));
+
+	//Menu Background
+	Texture textureMenuBG;
+	textureMenuBG = textureLoad("space-shooter/backgrounds/4.png");
+	Sprite spriteMenuBG;
+	spriteMenuBG.setTexture(textureMenuBG);
+	spriteMenuBG.setScale(Vector2f(MAX_WIDTH / spriteMenuBG.getLocalBounds().width, MAX_HEIGHT / spriteMenuBG.getLocalBounds().height));
 
 	//Set the icon
 	Image icon;
@@ -273,6 +288,7 @@ void Gamerun::run()
 						if (pString.size() <= 2)
 						{
 							pString += (char)event.text.unicode;
+							pName.setString(pString);
 						}
 					}
 				}
@@ -413,15 +429,14 @@ void Gamerun::run()
 
 				//Set 'Name' text settings
 				playText.text.setCharacterSize(20);
+				playText.text.setString("Enter your initials");
 				playText.text.setColor(Color(148, 88, 201));
 				playText.text.setPosition(Vector2f(MAX_WIDTH / 2 - playText.text.getGlobalBounds().width / 2, 250));
-				playText.text.setString("Enter your initials");
 
 				//Set 'Name' text settings
 				pName.setCharacterSize(25);
 				pName.setColor(Color(148, 88, 201));
 				pName.setPosition(Vector2f(MAX_WIDTH / 2 - pName.getGlobalBounds().width / 2, 280));
-				pName.setString(pString);
 
 				//Updates highscores system
 
@@ -790,7 +805,7 @@ void Gamerun::run()
 						projectileArray.push_back(projectile1);
 					}
 
-					else if (Player1.powerUp_FireRate == true) //Powerup attack: fast shot
+					if (Player1.powerUp_FireRate == true) //Powerup attack: fast shot
 					{
 						fireRate = 0.05;
 						projectile1.rect.setPosition(Player1.rect.getPosition().x - 5, Player1.rect.getPosition().y);
@@ -886,7 +901,24 @@ void Gamerun::run()
 			window.draw(healthBar.sprite);
 			window.draw(health.sprite);
 		}
+
+		//Show 'GameOver' Screen
+		if (gameState == "GameOver")
+		{
+			//display 'Gameover' Text
+			titleText.text.setString("score: "+ to_string(Player1.score));
+			titleText.text.setCharacterSize(50);
+			titleText.text.setPosition(Vector2f(MAX_WIDTH/2-180, 50));
+
+			//Display backround
+			window.draw(spriteMenuBG);
+			
+			//Display player's score
+			window.draw(titleText.text);
+		}
+
 		window.display();//End current frame
+
 		}
 
 		//Output file for highscores
