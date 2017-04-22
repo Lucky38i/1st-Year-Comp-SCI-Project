@@ -1,0 +1,17 @@
+﻿  Gamerun.cpp
+c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\Particles.h(22): warning C4083: expected ')'; found identifier 'C4305'
+c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\Particles.h(28): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\almcb\documents\github\1st-year-comp-sci-project\space shooter sfml\Particles.h(29): warning C4305: 'initializing': truncation from 'double' to 'float'
+Gamerun.cpp(40): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+Gamerun.cpp(192): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+Gamerun.cpp(307): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+Gamerun.cpp(765): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+Gamerun.cpp(776): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+Gamerun.cpp(911): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+Gamerun.cpp(960): warning C4551: function call missing argument list
+Gamerun.cpp(970): warning C4551: function call missing argument list
+  Generating code
+  All 1284 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Space Shooter SFML.vcxproj -> C:\Users\almcb\Documents\GitHub\1st-Year-Comp-SCI-Project\Release\Space Shooter SFML.exe
+  Space Shooter SFML.vcxproj -> C:\Users\almcb\Documents\GitHub\1st-Year-Comp-SCI-Project\Release\Space Shooter SFML.pdb (Full PDB)
