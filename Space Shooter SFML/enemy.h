@@ -12,7 +12,7 @@ public:
 	float downSpeed = 0.5;
 	int movementLength = 100;
 	int attackDamage = 2;
-	int hp = 3;
+	int hp = 6;
 	int lifeTime = 1000;
 	int deathValue = 10;
 	double enemySpawnRate = 0.5; //Lower = faster eg. 1.5 = spawn enemy every 1.5 seconds
