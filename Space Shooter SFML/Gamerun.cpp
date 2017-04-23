@@ -13,7 +13,6 @@ void Gamerun::run()
 	ifstream enemyShips("Objects/enemyship.txt");
 	ifstream hsFile("Objects/highscore.txt");
 	static bool played = false;
-	static bool pressed = false;
 
 	//Stores values from enemyShips into enemy_ships array
 	for (int i = 0; i < 4; i++)
@@ -28,13 +27,6 @@ void Gamerun::run()
 		hsFile >> highScore[i].name >> highScore[i].score;
 	}
 	hsFile.close();
-
-	//Varibles for finding highest Score
-	int indexHighestScore;
-	double highestScore;
-
-	indexHighestScore = 0;
-	highestScore = highScore[indexHighestScore].score;
 
 	//Randomly picks a enemy ship from the array and loads the texture
 	srand(time(0));
