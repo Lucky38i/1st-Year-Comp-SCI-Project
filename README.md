@@ -19,14 +19,12 @@ I understand that it is up to me and me alone to ensure that I submit my full an
 
 I understand that the above rules apply even in the eventuality of computer or other information technology failures.
 
-# Software used
+# Libraries used used
 I have used the following from these sources:
 
-SFML
-https://www.sfml-dev.org/
+[SFML](https://www.sfml-dev.org/)
 
-Thor
-http://www.bromeon.ch/libraries/thor/
+[Thor](http://www.bromeon.ch/libraries/thor/)
 
 # Code Sourced
 The [random.cpp](https://github.com/Lucky38i/1st-Year-Comp-SCI-Project/blob/master/Space%20Shooter%20SFML/random.cpp) was entirely sourced from [here](https://youtu.be/owr_OBkE5Z4?t=43s)
